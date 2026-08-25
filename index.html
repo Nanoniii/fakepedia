@@ -458,29 +458,64 @@ function esc(s){
 }
 
 /* ============================================================
-   STORAGE (window.storage API, personal / not shared)
+   STORAGE
+   Uses window.storage when running inside Claude's preview (persists
+   across sessions there), and falls back to localStorage automatically
+   when the file is opened directly or hosted elsewhere (GitHub Pages,
+   etc.) so saving/loading always works.
 ============================================================ */
+var hasClaudeStorage = (typeof window.storage !== 'undefined' && window.storage &&
+  typeof window.storage.get === 'function' && typeof window.storage.set === 'function');
+
+function storageGet(key){
+  if(hasClaudeStorage){
+    return window.storage.get(key, false).catch(function(){ return null; });
+  }
+  try{
+    var v = localStorage.getItem(key);
+    return Promise.resolve(v !== null ? {value:v} : null);
+  }catch(e){ return Promise.resolve(null); }
+}
+function storageSet(key, value){
+  if(hasClaudeStorage){
+    return window.storage.set(key, value, false).catch(function(){ return null; });
+  }
+  try{
+    localStorage.setItem(key, value);
+    return Promise.resolve({value:value});
+  }catch(e){ return Promise.resolve(null); }
+}
+function storageDelete(key){
+  if(hasClaudeStorage){
+    return window.storage.delete(key, false).catch(function(){ return null; });
+  }
+  try{
+    localStorage.removeItem(key);
+    return Promise.resolve({deleted:true});
+  }catch(e){ return Promise.resolve(null); }
+}
+
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
     if(!state) return;
-    window.storage.set('draft', JSON.stringify(state), false).catch(function(){});
+    storageSet('draft', JSON.stringify(state));
   }, 500);
 }
 
 function loadDraft(){
-  return window.storage.get('draft', false).then(function(r){
+  return storageGet('draft').then(function(r){
     return r && r.value ? JSON.parse(r.value) : null;
   }).catch(function(){ return null; });
 }
 
 function getPageIndex(){
-  return window.storage.get('pageIndex', false).then(function(r){
+  return storageGet('pageIndex').then(function(r){
     return r && r.value ? JSON.parse(r.value) : [];
   }).catch(function(){ return []; });
 }
 function setPageIndex(list){
-  return window.storage.set('pageIndex', JSON.stringify(list), false).catch(function(){});
+  return storageSet('pageIndex', JSON.stringify(list));
 }
 
 /* ============================================================
@@ -788,7 +823,7 @@ document.getElementById('btnSaveAs').addEventListener('click', function(){
   if(!state) return;
   var name = (state.title && state.title.trim()) ? state.title.trim() : 'Página sem título';
   var id = 'p_' + Date.now();
-  window.storage.set('page:'+id, JSON.stringify(state), false).then(function(){
+  storageSet('page:'+id, JSON.stringify(state)).then(function(){
     return getPageIndex();
   }).then(function(list){
     list.push({id:id, title:name, date: new Date().toLocaleString('pt-BR')});
@@ -819,7 +854,7 @@ function openPagesModal(){
     }).join('');
     listEl.querySelectorAll('[data-open]').forEach(function(btn){
       btn.addEventListener('click', function(){
-        window.storage.get('page:'+btn.dataset.open, false).then(function(r){
+        storageGet('page:'+btn.dataset.open).then(function(r){
           if(r && r.value){
             state = JSON.parse(r.value);
             mode = 'read';
@@ -834,7 +869,7 @@ function openPagesModal(){
       btn.addEventListener('click', function(){
         var id = btn.dataset.delp;
         if(!confirm('Excluir esta página salva? Essa ação não pode ser desfeita.')) return;
-        window.storage.delete('page:'+id, false).then(function(){
+        storageDelete('page:'+id).then(function(){
           return getPageIndex();
         }).then(function(list2){
           return setPageIndex(list2.filter(function(p){ return p.id !== id; }));
