@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wikipédia Editor</title>
+<style>
+  :root{
+    --wiki-blue:#0645ad;
+    --wiki-border:#a2a9b1;
+    --wiki-bg:#f8f9fa;
+    --wiki-section-bg:#eaecf0;
+    --text:#202122;
+    --gray:#54595d;
+    --serif:'Linux Libertine','Georgia','Cambria','Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+    --edit-accent:#eaa500;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#fff;color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;}
+  a{color:var(--wiki-blue);text-decoration:none;cursor:default;}
+
+  /* ============ HEADER (visual only, mimics wikipedia chrome) ============ */
+  .wiki-header{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 14px;border-bottom:1px solid var(--wiki-border);
+    background:#fff;position:sticky;top:0;z-index:20;
+  }
+  .wiki-header .burger{font-size:20px;color:#333;cursor:default;}
+  .wiki-logo{display:flex;align-items:center;gap:8px;flex:1;}
+  .wiki-logo .globe{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff, #ddd 40%, #999 100%);
+    border:1px solid #999; position:relative; flex:none;
+    display:flex;align-items:center;justify-content:center;font-family:var(--serif);
+    font-weight:bold;font-size:15px;color:#333;
+  }
+  .wiki-logo .wordmark{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:0.3px;line-height:1;}
+  .wiki-logo .tagline{font-size:10.5px;color:var(--gray);letter-spacing:0.5px;}
+  .wiki-header .icon-btn{font-size:18px;color:#333;padding:6px;cursor:default;opacity:.75;}
+  .wiki-search{
+    display:none;flex:2;max-width:420px;
+    border:1px solid var(--wiki-border);border-radius:20px;
+    padding:6px 12px;color:var(--gray);font-size:13.5px;background:#f8f9fa;
+  }
+  @media(min-width:700px){ .wiki-search{display:block;} }
+
+  /* ============ EDITOR TOOLBAR (clearly ours, not wikipedia) ============ */
+  .editor-toolbar{
+    background:linear-gradient(#fff8ea,#fdf1d6);
+    border-bottom:2px solid var(--edit-accent);
+    padding:8px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    position:sticky;top:49px;z-index:19;font-size:13.5px;
+  }
+  @media(min-width:700px){ .editor-toolbar{top:53px;} }
+  .editor-toolbar .label{font-weight:700;color:#7a5b00;margin-right:4px;}
+  .tbtn{
+    border:1px solid #c9a227;background:#fff;color:#5c4400;
+    padding:6px 11px;border-radius:4px;font-size:13px;cursor:pointer;
+    font-family:var(--sans);white-space:nowrap;
+  }
+  .tbtn:hover{background:#fff3d6;}
+  .tbtn.primary{background:#eaa500;border-color:#c98600;color:#fff;font-weight:600;}
+  .tbtn.primary:hover{background:#d99400;}
+  .mode-pill{
+    margin-left:auto;display:flex;border:1px solid var(--wiki-border);border-radius:16px;overflow:hidden;
+  }
+  .mode-pill button{
+    border:none;background:#fff;padding:6px 14px;font-size:13px;cursor:pointer;font-family:var(--sans);
+  }
+  .mode-pill button.active{background:var(--wiki-blue);color:#fff;font-weight:600;}
+
+  /* ============ ARTICLE ============ */
+  .wiki-article{max-width:1000px;margin:0 auto;padding:18px 16px 60px;}
+  .page-title{
+    font-family:var(--serif);font-size:30px;font-weight:400;border-bottom:1px solid var(--wiki-border);
+    padding-bottom:6px;margin:0 0 4px;outline:none;
+  }
+  .page-desc{color:var(--gray);font-size:14px;font-style:italic;margin:0 0 16px;outline:none;}
+  .editing .page-title, .editing .page-desc{background:#fffbea;box-shadow:0 0 0 2px #ffe9a8 inset;border-radius:2px;}
+
+  .content-wrap{display:flex;flex-direction:column-reverse;gap:0;}
+  @media(min-width:800px){ .content-wrap{flex-direction:row;gap:24px;align-items:flex-start;} .article-body{flex:1;min-width:0;} }
+
+  .article-body p, .wiki-para{margin:0 0 14px;}
+  .article-body h2{
+    font-family:var(--serif);font-weight:400;font-size:22px;
+    padding-bottom:4px;margin:0;outline:none;flex:1;
+  }
+  .section-header{
+    display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--wiki-border);
+    margin:26px 0 10px;padding-bottom:4px;
+  }
+  .collapse-arrow{
+    flex:none;width:16px;text-align:center;font-size:11px;color:var(--gray);
+    cursor:pointer;user-select:none;transition:transform .15s;
+  }
+  .collapse-arrow.collapsed{transform:rotate(-90deg);}
+  .editing .wiki-para, .editing .article-body h2{outline:1px dashed transparent;}
+  .editing .wiki-para:hover, .editing .article-body h2:hover{outline:1px dashed #ffb700;background:#fffdf5;}
+  .wiki-para.collapsed{display:none;}
+  .section-block{position:relative;}
+  .section-del{
+    display:none;position:absolute;right:0;top:24px;background:#fff;border:1px solid #d33;color:#d33;
+    border-radius:3px;font-size:11px;padding:2px 6px;cursor:pointer;
+  }
+  .editing .section-block:hover .section-del{display:inline-block;}
+  .add-section-btn{margin-top:10px;}
+
+  /* ============ INFOBOX ============ */
+  .infobox{
+    width:100%;max-width:330px;margin:0 auto 20px;border:1px solid var(--wiki-border);
+    background:var(--wiki-bg);font-size:13px;line-height:1.45;
+  }
+  @media(min-width:800px){ .infobox{margin:0 0 20px;} }
+  .ib-title{
+    font-family:var(--serif);font-size:17px;font-weight:700;text-align:center;padding:8px 6px;outline:none;
+  }
+  .ib-section{
+    background:var(--wiki-section-bg);font-weight:700;text-align:center;padding:5px 6px;outline:none;
+  }
+  .ib-row{display:grid;grid-template-columns:38%1fr;border-top:1px solid #e2e2e2;position:relative;}
+  .ib-row .ib-label{font-weight:700;padding:6px 6px;outline:none;}
+  .ib-row .ib-value{padding:6px 6px;outline:none;white-space:pre-wrap;}
+  .ib-twocol{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e2e2e2;}
+  .ib-twocol div{padding:6px 6px;outline:none;white-space:pre-wrap;}
+  .ib-twocol div:first-child{border-right:1px solid #e2e2e2;}
+  .ib-list{border-top:1px solid #e2e2e2;padding:6px 6px;}
+  .ib-list .ib-list-label{font-weight:700;outline:none;display:block;margin-bottom:3px;}
+  .ib-list ul{margin:0;padding-left:18px;}
+  .ib-list li{outline:none;margin-bottom:2px;}
+  .ib-imggrid{display:grid;gap:2px;padding:6px;grid-template-columns:1fr;}
+  .ib-imggrid.n2{grid-template-columns:1fr 1fr;}
+  .ib-imggrid.n3, .ib-imggrid.n4{grid-template-columns:1fr 1fr;}
+  .ib-img-cell{text-align:center;font-size:11.5px;color:var(--gray);}
+  .ib-img-slot{
+    width:100%;aspect-ratio:4/3;background:#e9e9e9;border:1px dashed #b7b7b7;
+    display:flex;align-items:center;justify-content:center;color:#888;font-size:11px;text-align:center;padding:4px;
+  }
+  .editing .ib-img-slot{cursor:pointer;}
+  .editing .ib-img-slot:hover{background:#dfe9f7;border-color:var(--wiki-blue);}
+  .ib-imggrid img{width:100%;display:block;object-fit:cover;aspect-ratio:4/3;}
+  .editing .ib-imggrid img{cursor:pointer;}
+  .ib-caption{outline:none;padding:2px 3px;}
+  .ib-scoreline{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 6px;border-top:1px solid #e2e2e2;font-family:var(--serif);}
+  .ib-scoreline .team{font-weight:700;outline:none;flex:1;text-align:center;font-size:13px;}
+  .ib-scoreline .score{display:flex;gap:4px;align-items:center;font-size:18px;font-weight:700;}
+  .ib-scoreline .score span{outline:none;min-width:20px;text-align:center;}
+
+  .row-del{
+    display:none;position:absolute;top:2px;right:2px;background:#fff;border:1px solid #d33;color:#d33;
+    border-radius:50%;width:16px;height:16px;font-size:10px;line-height:14px;text-align:center;cursor:pointer;padding:0;
+  }
+  .editing .ib-row:hover .row-del, .editing .ib-section-wrap:hover .row-del,
+  .editing .ib-twocol-wrap:hover .row-del, .editing .ib-list-wrap:hover .row-del,
+  .editing .ib-imggrid-wrap:hover .row-del, .editing .ib-scoreline-wrap:hover .row-del{display:block;}
+  .ib-section-wrap,.ib-twocol-wrap,.ib-list-wrap,.ib-imggrid-wrap,.ib-scoreline-wrap{position:relative;}
+
+  .editing .ib-label:hover,.editing .ib-value:hover,.editing .ib-section:hover,.editing .ib-title:hover,
+  .editing .ib-twocol div:hover,.editing .ib-list li:hover,.editing .ib-caption:hover,.editing .ib-scoreline .team:hover,
+  .editing .ib-scoreline .score span:hover{background:#fffdf5;box-shadow:0 0 0 1px #ffb700 inset;}
+
+  .ib-addbar{padding:8px 6px;border-top:1px solid var(--wiki-border);display:flex;flex-direction:column;gap:6px;background:#f1f3f4;}
+  .ib-addbar-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  .ib-addbar-label{font-size:11px;color:var(--gray);flex:none;width:100%;}
+  .ib-addbar select, .ib-addbar button{font-size:12px;padding:4px 6px;font-family:var(--sans);}
+  .ib-addbar select{flex:1;min-width:0;}
+  .ib-addbar button{cursor:pointer;background:var(--wiki-blue);color:#fff;border:none;border-radius:3px;flex:none;}
+  .ib-list-addbtn{font-size:11px;color:var(--wiki-blue);cursor:pointer;margin-top:2px;display:inline-block;}
+
+  /* ============ MODAL ============ */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(32,33,34,.55);display:flex;align-items:center;justify-content:center;
+    z-index:100;padding:16px;
+  }
+  .modal-overlay.hidden{display:none;}
+  .modal-box{
+    background:#fff;max-width:760px;width:100%;max-height:85vh;overflow-y:auto;border-radius:6px;
+    padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.3);
+  }
+  .modal-box h2{font-family:var(--serif);font-size:24px;margin-top:0;}
+  .modal-box p.sub{color:var(--gray);font-size:13.5px;margin-top:-8px;}
+  .template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:16px;}
+  .template-card{
+    border:1px solid var(--wiki-border);border-radius:6px;padding:14px;cursor:pointer;background:#fafafa;
+    transition:border-color .15s, background .15s;
+  }
+  .template-card:hover{border-color:var(--wiki-blue);background:#eef4ff;}
+  .template-card .emoji{font-size:26px;margin-bottom:6px;}
+  .template-card .tname{font-weight:700;font-size:14.5px;margin-bottom:3px;}
+  .template-card .tdesc{font-size:12px;color:var(--gray);line-height:1.35;}
+  .draft-banner{
+    border:1px solid var(--wiki-blue);background:#eaf1fb;border-radius:5px;padding:10px 12px;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;font-size:13.5px;
+  }
+
+  /* ============ MY PAGES PANEL ============ */
+  .pages-panel{padding-top:6px;}
+  .pages-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+  .page-item{
+    display:flex;justify-content:space-between;align-items:center;border:1px solid var(--wiki-border);
+    border-radius:5px;padding:9px 12px;font-size:13.5px;
+  }
+  .page-item .pi-name{font-weight:600;}
+  .page-item .pi-date{color:var(--gray);font-size:11.5px;}
+  .page-item .pi-actions button{font-size:12px;padding:4px 9px;margin-left:6px;cursor:pointer;border-radius:3px;}
+  .pi-open{border:1px solid var(--wiki-blue);background:#fff;color:var(--wiki-blue);}
+  .pi-del{border:1px solid #d33;background:#fff;color:#d33;}
+  .empty-note{color:var(--gray);font-size:13px;font-style:italic;}
+
+  /* ============ MISC ============ */
+  .badge{
+    position:fixed;bottom:10px;right:10px;background:rgba(32,33,34,.85);color:#fff;font-size:11px;
+    padding:5px 10px;border-radius:14px;z-index:15;font-family:var(--sans);
+  }
+  .wiki-footer{max-width:1000px;margin:0 auto;padding:20px 16px 50px;border-top:1px solid var(--wiki-border);color:var(--gray);font-size:11.5px;text-align:center;}
+  .hidden{display:none !important;}
+  .file-input{display:none;}
+</style>
+</head>
+<body>
+
+<header class="wiki-header">
+  <span class="burger">&#9776;</span>
+  <div class="wiki-logo">
+    <div class="globe">W</div>
+    <div>
+      <div class="wordmark">WIKIPÉDIA</div>
+      <div class="tagline">a enciclopédia que você inventou</div>
+    </div>
+  </div>
+  <div class="wiki-search">Pesquisar na Wikipédia...</div>
+  <span class="icon-btn">&#128269;</span>
+  <span class="icon-btn">&#128100;</span>
+</header>
+
+<div class="editor-toolbar">
+  <span class="label">Wikipédia Editor:</span>
+  <button class="tbtn" id="btnNew">📄 Nova página</button>
+  <button class="tbtn" id="btnSaveAs">💾 Salvar página</button>
+  <button class="tbtn" id="btnMyPages">🗂️ Minhas páginas</button>
+  <button class="tbtn" id="btnDownload">⬇️ Baixar HTML</button>
+  <div class="mode-pill">
+    <button id="btnRead" class="active">Ler</button>
+    <button id="btnEdit">Editar</button>
+  </div>
+</div>
+
+<main class="wiki-article">
+  <h1 class="page-title" id="pageTitle"></h1>
+  <p class="page-desc" id="pageDesc"></p>
+  <div class="content-wrap">
+    <div class="article-body" id="articleBody"></div>
+    <div class="infobox" id="infobox"></div>
+  </div>
+  <div id="addSectionWrap" class="hidden">
+    <button class="tbtn add-section-btn" id="btnAddSection">+ Adicionar seção</button>
+  </div>
+</main>
+
+<footer class="wiki-footer">
+  Este site é um projeto paródia / brincadeira para montar páginas fictícias no estilo Wikipédia.<br>
+  Não é afiliado à Wikimedia Foundation. Todo conteúdo criado aqui fica salvo apenas no seu navegador.
+</footer>
+
+<div class="badge">🛠️ Editor não-oficial — projeto paródia</div>
+<input type="file" accept="image/*" class="file-input" id="fileInput">
+
+<!-- TEMPLATE PICKER MODAL -->
+<div class="modal-overlay" id="templateModal">
+  <div class="modal-box">
+    <h2>Criar uma página</h2>
+    <p class="sub">Escolha um modelo pronto de infobox ou comece do zero.</p>
+    <div id="draftBannerWrap"></div>
+    <div class="template-grid" id="templateGrid"></div>
+  </div>
+</div>
+
+<!-- MY PAGES MODAL -->
+<div class="modal-overlay hidden" id="pagesModal">
+  <div class="modal-box pages-panel">
+    <h2>Minhas páginas salvas</h2>
+    <p class="sub">Páginas ficam guardadas neste navegador.</p>
+    <div class="pages-list" id="pagesList"></div>
+    <div style="margin-top:16px;text-align:right;">
+      <button class="tbtn" id="btnClosePages">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   TEMPLATES
+============================================================ */
+function T(){ return {
+  blank: {
+    emoji:'📝', name:'Página em branco', desc:'Comece do zero e monte seu próprio infobox campo a campo.',
+    title:'Nome da Página', subtitle:'descrição curta do assunto',
+    infobox:[
+      {t:'title', text:'Título do Infobox'},
+      {t:'row', label:'Campo', value:'Valor'}
+    ],
+    body:[{heading:null, text:'Escreva aqui o texto principal do seu artigo. Clique em "Editar" para começar.'}]
+  },
+  pessoa: {
+    emoji:'🧑', name:'Pessoa / Biografia', desc:'Modelo de biografia, como astronautas, artistas ou cientistas.',
+    title:'Nome da Pessoa', subtitle:'ocupação, conhecido(a) por algo importante',
+    infobox:[
+      {t:'image', src:null, caption:'Nome da pessoa em [ano]'},
+      {t:'row', label:'Nome completo', value:'Nome Completo Aqui'},
+      {t:'row', label:'Nascimento', value:'1 de janeiro de 1990\nCidade, Estado, País'},
+      {t:'row', label:'Morte', value:'(deixe em branco se estiver vivo)'},
+      {t:'row', label:'Progenitores', value:'Mãe: Nome da mãe\nPai: Nome do pai'},
+      {t:'row', label:'Cônjuge', value:'Nome do cônjuge (ano–ano)'},
+      {t:'row', label:'Ocupação', value:'Profissão'},
+      {t:'row', label:'Prêmios', value:'Lista de prêmios recebidos'}
+    ],
+    body:[
+      {heading:null, text:'Escreva aqui a introdução da biografia.'},
+      {heading:'Carreira', text:'Detalhes sobre a carreira da pessoa.'}
+    ]
+  },
+  pais: {
+    emoji:'🌎', name:'País', desc:'Ficha de país com bandeira, capital, governo, população etc.',
+    title:'Nome do País', subtitle:'República Federativa de...',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Bandeira'},{src:null,caption:'Brasão'}]},
+      {t:'row', label:'Lema', value:'Lema oficial'},
+      {t:'row', label:'Capital', value:'Nome da capital'},
+      {t:'row', label:'Maior cidade', value:'Nome da maior cidade'},
+      {t:'row', label:'Língua oficial', value:'Idioma'},
+      {t:'row', label:'Grupos étnicos', value:'Ex: 45% Pardos, 43% Brancos, 10% Pretos'},
+      {t:'row', label:'Religião', value:'Ex: 80% Cristianismo, 10% sem religião'},
+      {t:'row', label:'Gentílico', value:'Ex: Brasileiro'},
+      {t:'row', label:'Governo', value:'Ex: República federativa presidencialista'},
+      {t:'row', label:'Presidente', value:'Nome do presidente'},
+      {t:'row', label:'Área', value:'Ex: 8.510.000 km²'},
+      {t:'row', label:'População', value:'Ex: 203 milhões'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o país.'},{heading:'Geografia', text:'Descrição geográfica.'}]
+  },
+  batalha: {
+    emoji:'⚔️', name:'Batalha / Guerra', desc:'Infobox militar com beligerantes, comandantes e forças.',
+    title:'Nome da Batalha', subtitle:'parte de um conflito maior',
+    infobox:[
+      {t:'title', text:'Nome da Batalha'},
+      {t:'row', label:'Parte de', value:'Nome do conflito maior'},
+      {t:'imggrid', items:[{src:null,caption:'legenda 1'},{src:null,caption:'legenda 2'},{src:null,caption:'legenda 3'},{src:null,caption:'legenda 4'}]},
+      {t:'row', label:'Data', value:'dd de mês a dd de mês de aaaa'},
+      {t:'row', label:'Local', value:'Região, País'},
+      {t:'row', label:'Desfecho', value:'Vitória de...'},
+      {t:'section', text:'Beligerantes'},
+      {t:'twocol', left:'Lado A\n• Nação 1\n• Nação 2', right:'Lado B\n• Nação 3'},
+      {t:'section', text:'Comandantes'},
+      {t:'twocol', left:'General A', right:'General B'},
+      {t:'section', text:'Forças'},
+      {t:'twocol', left:'100.000 soldados', right:'120.000 soldados'},
+      {t:'section', text:'Baixas'},
+      {t:'twocol', left:'10.000 mortos', right:'8.000 mortos'}
+    ],
+    body:[{heading:null, text:'Escreva aqui o resumo da batalha.'},{heading:'Antecedentes', text:'Contexto antes da batalha.'}]
+  },
+  eleicao: {
+    emoji:'🗳️', name:'Eleição', desc:'Comparação entre dois candidatos, votos e participação.',
+    title:'Eleição de aaaa', subtitle:'eleição presidencial / geral',
+    infobox:[
+      {t:'title', text:'Eleição de aaaa'},
+      {t:'row', label:'Data', value:'dd de mês de aaaa'},
+      {t:'row', label:'Registrado', value:'Ex: 150.000.000'},
+      {t:'row', label:'Participação', value:'Ex: 120.000.000 (80%)'},
+      {t:'section', text:'Candidatos'},
+      {t:'imggrid', items:[{src:null,caption:'Candidato 1'},{src:null,caption:'Candidato 2'}]},
+      {t:'twocol', left:'Candidato 1\nPartido A\nXX% dos votos', right:'Candidato 2\nPartido B\nXX% dos votos'}
+    ],
+    body:[{heading:null, text:'Escreva aqui o resumo da eleição.'},{heading:'Resultado', text:'Detalhes do resultado.'}]
+  },
+  crime: {
+    emoji:'🚨', name:'Crime / Incidente', desc:'Ficha de incidente com tipo de ataque, alvos, armas e vítimas.',
+    title:'Nome do Incidente', subtitle:'tipo de incidente ocorrido em [local]',
+    infobox:[
+      {t:'title', text:'Nome do Incidente'},
+      {t:'imggrid', items:[{src:null,caption:'legenda da imagem'}]},
+      {t:'row', label:'Local', value:'Cidade, País'},
+      {t:'row', label:'Data', value:'dd de mês de aaaa'},
+      {t:'row', label:'Tipo de ataque', value:'Descrição do tipo'},
+      {t:'row', label:'Alvo(s)', value:'Quem foi atingido'},
+      {t:'list', label:'Arma(s)', items:['Item 1','Item 2']},
+      {t:'row', label:'Mortes', value:'0'},
+      {t:'row', label:'Feridos', value:'0'},
+      {t:'row', label:'Responsável(is)', value:'Nome(s)'}
+    ],
+    body:[{heading:null, text:'Escreva aqui o resumo do incidente.'}]
+  },
+  futebol: {
+    emoji:'⚽', name:'Partida de futebol', desc:'Placar, times, estádio, árbitro e público de uma partida.',
+    title:'Final de aaaa', subtitle:'nome da competição',
+    infobox:[
+      {t:'title', text:'Final de aaaa'},
+      {t:'imggrid', items:[{src:null,caption:'Estádio 1'},{src:null,caption:'Estádio 2'}]},
+      {t:'row', label:'Evento', value:'Nome da competição'},
+      {t:'scoreline', teamA:'Time A', teamB:'Time B', scoreA:'0', scoreB:'0'},
+      {t:'row', label:'Data', value:'dd de mês de aaaa'},
+      {t:'row', label:'Local', value:'Estádio, Cidade'},
+      {t:'row', label:'Árbitro', value:'Nome do árbitro'},
+      {t:'row', label:'Público', value:'0'}
+    ],
+    body:[{heading:null, text:'Escreva aqui o resumo da partida.'}]
+  }
+};}
+
+/* ============================================================
+   CAMPOS PRONTOS (quick-add)
+============================================================ */
+var QUICK_FIELDS = [
+  { cat:'Pessoa', items:['Nome completo','Nascimento','Morte','Progenitores','Cônjuge','Filhos','Ocupação','Formação','Prêmios','Nacionalidade'] },
+  { cat:'País / Lugar', items:['Capital','Maior cidade','Língua oficial','Grupos étnicos','Religião','Gentílico','Governo','Presidente','Vice-presidente','Área','População','Moeda','Fuso horário'] },
+  { cat:'Evento', items:['Data','Local','Duração','Desfecho','Organizador','Participantes'] },
+  { cat:'Eleição', items:['Registrado','Participação','Candidato','Partido','Votos','Percentual'] },
+  { cat:'Crime / Incidente', items:['Tipo de ataque','Alvo(s)','Mortes','Feridos','Responsável(is)','Força(s) de defesa'] },
+  { cat:'Esporte', items:['Evento','Árbitro','Público','Estádio','Competição'] },
+  { cat:'Elementos compostos', items:['Arma(s) — lista','Beligerantes — seção + 2 colunas','Comandantes — seção + 2 colunas','Forças — seção + 2 colunas','Baixas — seção + 2 colunas'] }
+];
+function quickFieldOptionsHtml(){
+  return QUICK_FIELDS.map(function(group){
+    var opts = group.items.map(function(it){ return '<option value="'+esc(it)+'">'+esc(it)+'</option>'; }).join('');
+    return '<optgroup label="'+esc(group.cat)+'">'+opts+'</optgroup>';
+  }).join('');
+}
+function addQuickField(label){
+  if(label === 'Arma(s) — lista'){
+    state.infobox.push({t:'list', label:'Arma(s)', items:['Item 1']});
+  } else if(label.indexOf(' — seção + 2 colunas') >= 0){
+    var base = label.split(' — ')[0];
+    state.infobox.push({t:'section', text:base});
+    state.infobox.push({t:'twocol', left:'Lado A', right:'Lado B'});
+  } else {
+    state.infobox.push({t:'row', label:label, value:'Valor'});
+  }
+  renderInfobox();
+  scheduleSave();
+}
+
+/* ============================================================
+   STATE
+============================================================ */
+var state = null;
+var mode = 'read';
+var pendingImg = null; // {idx, ci}
+var saveTimer = null;
+
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+function esc(s){
+  s = (s===undefined || s===null) ? '' : String(s);
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ============================================================
+   STORAGE (window.storage API, personal / not shared)
+============================================================ */
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    if(!state) return;
+    window.storage.set('draft', JSON.stringify(state), false).catch(function(){});
+  }, 500);
+}
+
+function loadDraft(){
+  return window.storage.get('draft', false).then(function(r){
+    return r && r.value ? JSON.parse(r.value) : null;
+  }).catch(function(){ return null; });
+}
+
+function getPageIndex(){
+  return window.storage.get('pageIndex', false).then(function(r){
+    return r && r.value ? JSON.parse(r.value) : [];
+  }).catch(function(){ return []; });
+}
+function setPageIndex(list){
+  return window.storage.set('pageIndex', JSON.stringify(list), false).catch(function(){});
+}
+
+/* ============================================================
+   RENDER: INFOBOX
+============================================================ */
+function renderInfobox(){
+  var box = document.getElementById('infobox');
+  var html = '';
+  state.infobox.forEach(function(item, idx){
+    if(item.t === 'title'){
+      html += '<div class="ib-title" contenteditable data-idx="'+idx+'" data-field="text">'+esc(item.text)+'</div>';
+    } else if(item.t === 'section'){
+      html += '<div class="ib-section-wrap"><div class="ib-section" contenteditable data-idx="'+idx+'" data-field="text">'+esc(item.text)+'</div>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'row'){
+      html += '<div class="ib-row">'+
+              '<div class="ib-label" contenteditable data-idx="'+idx+'" data-field="label">'+esc(item.label)+'</div>'+
+              '<div class="ib-value" contenteditable data-idx="'+idx+'" data-field="value">'+esc(item.value)+'</div>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button>'+
+              '</div>';
+    } else if(item.t === 'twocol'){
+      html += '<div class="ib-twocol-wrap"><div class="ib-twocol">'+
+              '<div contenteditable data-idx="'+idx+'" data-field="left">'+esc(item.left)+'</div>'+
+              '<div contenteditable data-idx="'+idx+'" data-field="right">'+esc(item.right)+'</div>'+
+              '</div><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'list'){
+      var lis = item.items.map(function(li, ci){
+        return '<li contenteditable data-idx="'+idx+'" data-field="listitem" data-li="'+ci+'">'+esc(li)+'</li>';
+      }).join('');
+      html += '<div class="ib-list-wrap"><div class="ib-list">'+
+              '<span class="ib-list-label" contenteditable data-idx="'+idx+'" data-field="listlabel">'+esc(item.label)+'</span>'+
+              '<ul>'+lis+'</ul>'+
+              (mode==='edit' ? '<span class="ib-list-addbtn" data-addlistitem="'+idx+'">+ adicionar item</span>' : '')+
+              '</div><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'imggrid'){
+      var n = item.items.length;
+      var cls = n<=1 ? '' : (n===2?'n2':(n===3?'n3':'n4'));
+      var cells = item.items.map(function(im, ci){
+        var inner = im.src
+          ? '<img src="'+im.src+'" data-imgidx="'+idx+'" data-imgci="'+ci+'">'
+          : '<div class="ib-img-slot" data-imgidx="'+idx+'" data-imgci="'+ci+'">'+(mode==='edit' ? '🖼️ clique para adicionar imagem' : '')+'</div>';
+        return '<div class="ib-img-cell">'+inner+'<div class="ib-caption" contenteditable data-idx="'+idx+'" data-field="caption" data-ci="'+ci+'">'+esc(im.caption)+'</div></div>';
+      }).join('');
+      html += '<div class="ib-imggrid-wrap"><div class="ib-imggrid '+cls+'">'+cells+'</div>'+
+              (mode==='edit' ? '<span class="ib-list-addbtn" style="margin-left:6px;" data-addimg="'+idx+'">+ adicionar foto</span>' : '')+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'image'){
+      var inner2 = item.src
+        ? '<img src="'+item.src+'" data-imgidx="'+idx+'" style="width:100%;display:block;">'
+        : '<div class="ib-img-slot" data-imgidx="'+idx+'" style="aspect-ratio:1/1;">'+(mode==='edit' ? '🖼️ clique para adicionar imagem' : '')+'</div>';
+      html += '<div class="ib-imggrid-wrap" style="padding:6px;">'+inner2+
+              '<div class="ib-caption" style="text-align:center;font-size:11.5px;color:#54595d;" contenteditable data-idx="'+idx+'" data-field="caption">'+esc(item.caption)+'</div>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'scoreline'){
+      html += '<div class="ib-scoreline-wrap"><div class="ib-scoreline">'+
+              '<div class="team" contenteditable data-idx="'+idx+'" data-field="teamA">'+esc(item.teamA)+'</div>'+
+              '<div class="score"><span contenteditable data-idx="'+idx+'" data-field="scoreA">'+esc(item.scoreA)+'</span>–<span contenteditable data-idx="'+idx+'" data-field="scoreB">'+esc(item.scoreB)+'</span></div>'+
+              '<div class="team" contenteditable data-idx="'+idx+'" data-field="teamB">'+esc(item.teamB)+'</div>'+
+              '</div><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    }
+  });
+
+  if(mode === 'edit'){
+    html += '<div class="ib-addbar">'+
+      '<div class="ib-addbar-row">'+
+        '<span class="ib-addbar-label">Campo pronto:</span>'+
+        '<select id="quickFieldSelect">'+quickFieldOptionsHtml()+'</select>'+
+        '<button id="quickFieldBtn">+ Adicionar</button>'+
+      '</div>'+
+      '<div class="ib-addbar-row">'+
+        '<span class="ib-addbar-label">Elemento genérico:</span>'+
+        '<select id="addRowType">'+
+          '<option value="row">Campo (rótulo + valor)</option>'+
+          '<option value="section">Seção (título colorido)</option>'+
+          '<option value="twocol">Duas colunas</option>'+
+          '<option value="list">Lista</option>'+
+          '<option value="imggrid">Imagem(ns)</option>'+
+          '<option value="scoreline">Placar (times)</option>'+
+        '</select>'+
+        '<button id="addRowBtn">+ Adicionar</button>'+
+      '</div>'+
+      '</div>';
+  }
+  box.innerHTML = html;
+  box.contentEditable = false; // children control their own editability
+  setContentEditableState(box);
+}
+
+function setContentEditableState(container){
+  var editable = container.querySelectorAll('[contenteditable]');
+  editable.forEach(function(el){ el.contentEditable = (mode === 'edit'); });
+}
+
+/* ============================================================
+   RENDER: BODY / TITLE
+============================================================ */
+function renderBody(){
+  var wrap = document.getElementById('articleBody');
+  var html = '';
+  state.body.forEach(function(sec, i){
+    html += '<div class="section-block">';
+    var hasHeading = (sec.heading !== null && sec.heading !== undefined);
+    var isCollapsed = hasHeading && !!sec.collapsed;
+    if(hasHeading){
+      html += '<div class="section-header">'+
+        '<span class="collapse-arrow'+(isCollapsed?' collapsed':'')+'" data-carrow="'+i+'">▼</span>'+
+        '<h2 contenteditable data-bidx="'+i+'" data-bfield="heading">'+esc(sec.heading)+'</h2>'+
+        '</div>';
+    }
+    html += '<div class="wiki-para'+(isCollapsed?' collapsed':'')+'" contenteditable data-bidx="'+i+'" data-bfield="text">'+esc(sec.text)+'</div>';
+    if(i > 0){ html += '<button class="section-del" data-secdel="'+i+'">Remover seção</button>'; }
+    html += '</div>';
+  });
+  wrap.innerHTML = html;
+  setContentEditableState(wrap);
+}
+
+function renderHeader(){
+  var titleEl = document.getElementById('pageTitle');
+  var descEl = document.getElementById('pageDesc');
+  titleEl.textContent = state.title || '';
+  descEl.textContent = state.subtitle || '';
+  titleEl.contentEditable = (mode === 'edit');
+  descEl.contentEditable = (mode === 'edit');
+}
+
+function renderAll(){
+  document.body.classList.toggle('editing', mode === 'edit');
+  document.getElementById('btnRead').classList.toggle('active', mode==='read');
+  document.getElementById('btnEdit').classList.toggle('active', mode==='edit');
+  document.getElementById('addSectionWrap').classList.toggle('hidden', mode!=='edit');
+  renderHeader();
+  renderInfobox();
+  renderBody();
+}
+
+/* ============================================================
+   EVENT DELEGATION: EDITS
+============================================================ */
+document.getElementById('infobox').addEventListener('input', function(e){
+  var el = e.target;
+  if(!el.dataset || el.dataset.idx === undefined) return;
+  var idx = parseInt(el.dataset.idx, 10);
+  var field = el.dataset.field;
+  var item = state.infobox[idx];
+  if(!item) return;
+  var val = el.innerText;
+  if(field === 'listitem'){
+    item.items[parseInt(el.dataset.li,10)] = val;
+  } else if(field === 'caption'){
+    if(el.dataset.ci !== undefined){ item.items[parseInt(el.dataset.ci,10)].caption = val; }
+    else { item.caption = val; }
+  } else if(field === 'listlabel'){
+    item.label = val;
+  } else {
+    item[field] = val;
+  }
+  scheduleSave();
+});
+
+document.getElementById('infobox').addEventListener('click', function(e){
+  var t = e.target;
+  if(t.id === 'addRowBtn'){
+    var type = document.getElementById('addRowType').value;
+    addInfoboxRow(type);
+    return;
+  }
+  if(t.id === 'quickFieldBtn'){
+    var qlabel = document.getElementById('quickFieldSelect').value;
+    addQuickField(qlabel);
+    return;
+  }
+  if(t.dataset && t.dataset.del !== undefined){
+    state.infobox.splice(parseInt(t.dataset.del,10), 1);
+    renderInfobox(); scheduleSave();
+    return;
+  }
+  if(t.dataset && t.dataset.addlistitem !== undefined){
+    var idx = parseInt(t.dataset.addlistitem,10);
+    state.infobox[idx].items.push('Novo item');
+    renderInfobox(); scheduleSave();
+    return;
+  }
+  if(t.dataset && t.dataset.addimg !== undefined){
+    var idx2 = parseInt(t.dataset.addimg,10);
+    state.infobox[idx2].items.push({src:null, caption:'legenda'});
+    renderInfobox(); scheduleSave();
+    return;
+  }
+  if(mode === 'edit' && t.dataset && t.dataset.imgidx !== undefined){
+    pendingImg = { idx: parseInt(t.dataset.imgidx,10), ci: t.dataset.imgci !== undefined ? parseInt(t.dataset.imgci,10) : null };
+    document.getElementById('fileInput').click();
+  }
+});
+
+function addInfoboxRow(type){
+  var defaults = {
+    row: {t:'row', label:'Novo campo', value:'Valor'},
+    section: {t:'section', text:'Nova seção'},
+    twocol: {t:'twocol', left:'Coluna A', right:'Coluna B'},
+    list: {t:'list', label:'Lista', items:['Item 1']},
+    imggrid: {t:'imggrid', items:[{src:null, caption:'legenda'}]},
+    scoreline: {t:'scoreline', teamA:'Time A', teamB:'Time B', scoreA:'0', scoreB:'0'}
+  };
+  state.infobox.push(deepClone(defaults[type] || defaults.row));
+  renderInfobox();
+  scheduleSave();
+}
+
+document.getElementById('fileInput').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file || !pendingImg) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    var dataUrl = ev.target.result;
+    var item = state.infobox[pendingImg.idx];
+    if(pendingImg.ci !== null){ item.items[pendingImg.ci].src = dataUrl; }
+    else { item.src = dataUrl; }
+    pendingImg = null;
+    renderInfobox();
+    scheduleSave();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+document.getElementById('articleBody').addEventListener('input', function(e){
+  var el = e.target;
+  if(el.dataset.bidx === undefined) return;
+  var i = parseInt(el.dataset.bidx,10);
+  state.body[i][el.dataset.bfield] = el.innerText;
+  scheduleSave();
+});
+document.getElementById('articleBody').addEventListener('click', function(e){
+  if(e.target.dataset && e.target.dataset.secdel !== undefined){
+    state.body.splice(parseInt(e.target.dataset.secdel,10), 1);
+    renderBody(); scheduleSave();
+    return;
+  }
+  if(e.target.dataset && e.target.dataset.carrow !== undefined){
+    var i = parseInt(e.target.dataset.carrow,10);
+    state.body[i].collapsed = !state.body[i].collapsed;
+    renderBody(); scheduleSave();
+  }
+});
+document.getElementById('btnAddSection').addEventListener('click', function(){
+  state.body.push({heading:'Nova seção', text:'Escreva aqui...'});
+  renderBody(); scheduleSave();
+});
+
+document.getElementById('pageTitle').addEventListener('input', function(e){
+  state.title = e.target.textContent; scheduleSave();
+});
+document.getElementById('pageDesc').addEventListener('input', function(e){
+  state.subtitle = e.target.textContent; scheduleSave();
+});
+
+/* ============================================================
+   MODE SWITCH
+============================================================ */
+document.getElementById('btnRead').addEventListener('click', function(){ mode='read'; renderAll(); });
+document.getElementById('btnEdit').addEventListener('click', function(){ mode='edit'; renderAll(); });
+
+/* ============================================================
+   TEMPLATE MODAL
+============================================================ */
+function openTemplateModal(){
+  var grid = document.getElementById('templateGrid');
+  var templates = T();
+  grid.innerHTML = Object.keys(templates).map(function(key){
+    var t = templates[key];
+    return '<div class="template-card" data-tpl="'+key+'">'+
+      '<div class="emoji">'+t.emoji+'</div>'+
+      '<div class="tname">'+esc(t.name)+'</div>'+
+      '<div class="tdesc">'+esc(t.desc)+'</div>'+
+      '</div>';
+  }).join('');
+  grid.querySelectorAll('.template-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      startFromTemplate(card.dataset.tpl);
+      closeTemplateModal();
+    });
+  });
+  document.getElementById('templateModal').classList.remove('hidden');
+}
+function closeTemplateModal(){
+  document.getElementById('templateModal').classList.add('hidden');
+}
+function startFromTemplate(key){
+  var templates = T();
+  state = deepClone(templates[key] || templates.blank);
+  mode = 'edit';
+  renderAll();
+  scheduleSave();
+}
+
+document.getElementById('btnNew').addEventListener('click', function(){
+  openTemplateModal();
+});
+
+/* ============================================================
+   SAVE AS / MY PAGES
+============================================================ */
+document.getElementById('btnSaveAs').addEventListener('click', function(){
+  if(!state) return;
+  var name = (state.title && state.title.trim()) ? state.title.trim() : 'Página sem título';
+  var id = 'p_' + Date.now();
+  window.storage.set('page:'+id, JSON.stringify(state), false).then(function(){
+    return getPageIndex();
+  }).then(function(list){
+    list.push({id:id, title:name, date: new Date().toLocaleString('pt-BR')});
+    return setPageIndex(list);
+  }).then(function(){
+    alert('Página "'+name+'" salva com sucesso! Abra em "Minhas páginas" quando quiser.');
+  }).catch(function(){
+    alert('Não foi possível salvar agora. Tente novamente.');
+  });
+});
+
+function openPagesModal(){
+  document.getElementById('pagesModal').classList.remove('hidden');
+  var listEl = document.getElementById('pagesList');
+  listEl.innerHTML = '<p class="empty-note">Carregando...</p>';
+  getPageIndex().then(function(list){
+    if(!list.length){
+      listEl.innerHTML = '<p class="empty-note">Você ainda não salvou nenhuma página. Use "Salvar página" depois de editar.</p>';
+      return;
+    }
+    listEl.innerHTML = list.map(function(p){
+      return '<div class="page-item">'+
+        '<div><div class="pi-name">'+esc(p.title)+'</div><div class="pi-date">'+esc(p.date||'')+'</div></div>'+
+        '<div class="pi-actions">'+
+          '<button class="pi-open" data-open="'+p.id+'">Abrir</button>'+
+          '<button class="pi-del" data-delp="'+p.id+'">Excluir</button>'+
+        '</div></div>';
+    }).join('');
+    listEl.querySelectorAll('[data-open]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        window.storage.get('page:'+btn.dataset.open, false).then(function(r){
+          if(r && r.value){
+            state = JSON.parse(r.value);
+            mode = 'read';
+            renderAll();
+            scheduleSave();
+            document.getElementById('pagesModal').classList.add('hidden');
+          }
+        });
+      });
+    });
+    listEl.querySelectorAll('[data-delp]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.dataset.delp;
+        if(!confirm('Excluir esta página salva? Essa ação não pode ser desfeita.')) return;
+        window.storage.delete('page:'+id, false).then(function(){
+          return getPageIndex();
+        }).then(function(list2){
+          return setPageIndex(list2.filter(function(p){ return p.id !== id; }));
+        }).then(openPagesModal);
+      });
+    });
+  });
+}
+document.getElementById('btnMyPages').addEventListener('click', openPagesModal);
+document.getElementById('btnClosePages').addEventListener('click', function(){
+  document.getElementById('pagesModal').classList.add('hidden');
+});
+
+/* ============================================================
+   DOWNLOAD STANDALONE HTML
+============================================================ */
+document.getElementById('btnDownload').addEventListener('click', function(){
+  if(!state) return;
+  var wasMode = mode;
+  mode = 'read';
+  renderAll();
+  var styleTag = document.querySelector('style').outerHTML;
+  var pageHtml = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'+
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
+    '<title>'+esc(state.title||'Página')+'</title>'+styleTag+'</head><body>'+
+    '<header class="wiki-header"><span class="burger">&#9776;</span><div class="wiki-logo">'+
+    '<div class="globe">W</div><div><div class="wordmark">WIKIPÉDIA</div>'+
+    '<div class="tagline">a enciclopédia que você inventou</div></div></div>'+
+    '<div class="wiki-search">Pesquisar na Wikipédia...</div>'+
+    '<span class="icon-btn">&#128269;</span><span class="icon-btn">&#128100;</span></header>'+
+    '<main class="wiki-article"><h1 class="page-title">'+esc(state.title)+'</h1>'+
+    '<p class="page-desc">'+esc(state.subtitle)+'</p>'+
+    '<div class="content-wrap"><div class="article-body">'+document.getElementById('articleBody').innerHTML+'</div>'+
+    '<div class="infobox">'+document.getElementById('infobox').innerHTML+'</div></div></main>'+
+    '<footer class="wiki-footer">Este site é um projeto paródia / brincadeira no estilo Wikipédia. Não é afiliado à Wikimedia Foundation.</footer>'+
+    '<div class="badge">🛠️ Página criada com Wikipédia Editor (paródia)</div>'+
+    '<script>document.querySelectorAll(".collapse-arrow").forEach(function(a){a.style.cursor="pointer";a.addEventListener("click",function(){a.classList.toggle("collapsed");var p=a.closest(".section-header").nextElementSibling;if(p)p.classList.toggle("collapsed");});});<\/script>'+
+    '</body></html>';
+  var blob = new Blob([pageHtml], {type:'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  var fname = (state.title||'pagina').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'pagina';
+  a.download = fname + '.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  mode = wasMode;
+  renderAll();
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+loadDraft().then(function(draft){
+  if(draft){
+    var grid = document.getElementById('templateGrid');
+    var bannerWrap = document.getElementById('draftBannerWrap');
+    bannerWrap.innerHTML = '<div class="draft-banner"><span>Você tem um rascunho de "'+esc(draft.title||'página sem título')+'" em andamento.</span>'+
+      '<button class="tbtn primary" id="btnContinueDraft">Continuar rascunho</button></div>';
+    document.getElementById('btnContinueDraft').addEventListener('click', function(){
+      state = draft; mode='edit'; renderAll(); closeTemplateModal();
+    });
+  }
+  openTemplateModal();
+});
+
+})();
+</script>
+</body>
+</html>
