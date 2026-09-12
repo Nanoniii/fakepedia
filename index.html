@@ -62,6 +62,12 @@
   .tbtn:hover{background:#fff3d6;}
   .tbtn.primary{background:#eaa500;border-color:#c98600;color:#fff;font-weight:600;}
   .tbtn.primary:hover{background:#d99400;}
+  #bannerSelect{
+    border:1px solid #c9a227;background:#fff;color:#5c4400;padding:6px 8px;border-radius:4px;
+    font-size:13px;font-family:var(--sans);cursor:pointer;
+  }
+  .save-status{font-size:11.5px;color:#7a5b00;opacity:0;transition:opacity .3s;white-space:nowrap;}
+  .save-status.show{opacity:.85;}
   .mode-pill{
     margin-left:auto;display:flex;border:1px solid var(--wiki-border);border-radius:16px;overflow:hidden;
   }
@@ -104,7 +110,8 @@
     display:none;position:absolute;right:0;top:24px;background:#fff;border:1px solid #d33;color:#d33;
     border-radius:3px;font-size:11px;padding:2px 6px;cursor:pointer;
   }
-  .editing .section-block:hover .section-del{display:inline-block;}
+  .editing .section-block .section-del{display:inline-block;opacity:.6;}
+  .editing .section-block:hover .section-del{opacity:1;}
   .add-section-btn{margin-top:10px;}
 
   /* ============ INFOBOX ============ */
@@ -146,19 +153,29 @@
   .ib-scoreline .team{font-weight:700;outline:none;flex:1;text-align:center;font-size:13px;}
   .ib-scoreline .score{display:flex;gap:4px;align-items:center;font-size:18px;font-weight:700;}
   .ib-scoreline .score span{outline:none;min-width:20px;text-align:center;}
+  .ib-quote{font-family:var(--serif);font-style:italic;padding:8px 10px;border-top:1px solid #e2e2e2;border-left:3px solid var(--wiki-blue);font-size:12.5px;outline:none;}
+  .ib-notice{border-top:1px solid #e2e2e2;border-left:3px solid #e6a817;background:#fef6e7;padding:6px 8px;font-size:11.5px;outline:none;}
 
   .row-del{
     display:none;position:absolute;top:2px;right:2px;background:#fff;border:1px solid #d33;color:#d33;
     border-radius:50%;width:16px;height:16px;font-size:10px;line-height:14px;text-align:center;cursor:pointer;padding:0;
   }
+  .editing .ib-row .row-del, .editing .ib-section-wrap .row-del,
+  .editing .ib-twocol-wrap .row-del, .editing .ib-list-wrap .row-del,
+  .editing .ib-imggrid-wrap .row-del, .editing .ib-scoreline-wrap .row-del,
+  .editing .ib-quote-wrap .row-del, .editing .ib-notice-wrap .row-del,
+  .editing .ib-divider-wrap .row-del{display:block;opacity:.6;}
   .editing .ib-row:hover .row-del, .editing .ib-section-wrap:hover .row-del,
   .editing .ib-twocol-wrap:hover .row-del, .editing .ib-list-wrap:hover .row-del,
-  .editing .ib-imggrid-wrap:hover .row-del, .editing .ib-scoreline-wrap:hover .row-del{display:block;}
-  .ib-section-wrap,.ib-twocol-wrap,.ib-list-wrap,.ib-imggrid-wrap,.ib-scoreline-wrap{position:relative;}
+  .editing .ib-imggrid-wrap:hover .row-del, .editing .ib-scoreline-wrap:hover .row-del,
+  .editing .ib-quote-wrap:hover .row-del, .editing .ib-notice-wrap:hover .row-del,
+  .editing .ib-divider-wrap:hover .row-del{opacity:1;}
+  .ib-section-wrap,.ib-twocol-wrap,.ib-list-wrap,.ib-imggrid-wrap,.ib-scoreline-wrap,.ib-title-wrap,.ib-divider-wrap,
+  .ib-quote-wrap,.ib-notice-wrap{position:relative;}
 
   .editing .ib-label:hover,.editing .ib-value:hover,.editing .ib-section:hover,.editing .ib-title:hover,
   .editing .ib-twocol div:hover,.editing .ib-list li:hover,.editing .ib-caption:hover,.editing .ib-scoreline .team:hover,
-  .editing .ib-scoreline .score span:hover{background:#fffdf5;box-shadow:0 0 0 1px #ffb700 inset;}
+  .editing .ib-scoreline .score span:hover,.editing .ib-quote:hover,.editing .ib-notice:hover{background:#fffdf5;box-shadow:0 0 0 1px #ffb700 inset;}
 
   .ib-addbar{padding:8px 6px;border-top:1px solid var(--wiki-border);display:flex;flex-direction:column;gap:6px;background:#f1f3f4;}
   .ib-addbar-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
@@ -167,6 +184,22 @@
   .ib-addbar select{flex:1;min-width:0;}
   .ib-addbar button{cursor:pointer;background:var(--wiki-blue);color:#fff;border:none;border-radius:3px;flex:none;}
   .ib-list-addbtn{font-size:11px;color:var(--wiki-blue);cursor:pointer;margin-top:2px;display:inline-block;}
+
+  /* ============ TABLE OF CONTENTS ============ */
+  .wiki-toc{
+    display:inline-block;border:1px solid var(--wiki-border);background:var(--wiki-bg);
+    padding:10px 22px 10px 14px;margin:0 0 16px;font-size:13.5px;
+  }
+  .wiki-toc-title{font-weight:700;text-align:center;margin-bottom:6px;}
+  .wiki-toc ol{margin:0;padding-left:20px;}
+  .wiki-toc li{margin-bottom:3px;}
+
+  /* ============ MAINTENANCE BANNER ============ */
+  .wiki-maint-banner{
+    display:flex;align-items:center;gap:10px;background:#fef6e7;border:1px solid #f0c36d;
+    border-left:5px solid #e6a817;padding:10px 12px;margin:10px 0 16px;font-size:13.5px;border-radius:2px;
+  }
+  .wmb-icon{font-size:18px;flex:none;}
 
   /* ============ MODAL ============ */
   .modal-overlay{
@@ -180,6 +213,11 @@
   }
   .modal-box h2{font-family:var(--serif);font-size:24px;margin-top:0;}
   .modal-box p.sub{color:var(--gray);font-size:13.5px;margin-top:-8px;}
+  .template-search{
+    width:100%;box-sizing:border-box;margin-top:14px;padding:9px 12px;border:1px solid var(--wiki-border);
+    border-radius:20px;font-size:13.5px;font-family:var(--sans);color:var(--text);
+  }
+  .template-search:focus{outline:none;border-color:var(--wiki-blue);}
   .template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:16px;}
   .template-card{
     border:1px solid var(--wiki-border);border-radius:6px;padding:14px;cursor:pointer;background:#fafafa;
@@ -216,6 +254,117 @@
   .wiki-footer{max-width:1000px;margin:0 auto;padding:20px 16px 50px;border-top:1px solid var(--wiki-border);color:var(--gray);font-size:11.5px;text-align:center;}
   .hidden{display:none !important;}
   .file-input{display:none;}
+
+  /* ============ RICH TEXT + BUILDER ============ */
+  :root{
+    --builder-blue:#0645ad;
+    --builder-soft:#eef4ff;
+    --builder-grid:#eaecf0;
+  }
+  .format-toolbar{
+    display:flex;flex-wrap:wrap;gap:5px;align-items:center;
+    padding:5px 6px;border:1px solid var(--wiki-border);background:#fff;
+    border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.08);
+  }
+  .format-toolbar:not(.hidden){display:flex;}
+  .fmt-btn{
+    border:1px solid #c8ccd1;background:#fff;color:#202122;padding:5px 8px;border-radius:3px;
+    font-size:12px;cursor:pointer;font-family:var(--sans);
+  }
+  .fmt-btn:hover{background:#f8f9fa;border-color:#72777d}
+  .fmt-btn.active{background:var(--wiki-blue);color:#fff}
+  [contenteditable="true"] a{color:var(--wiki-blue);text-decoration:underline;cursor:pointer}
+  .rich-text p{margin:0 0 10px}
+  .rich-text blockquote,.body-quote{
+    border-left:4px solid var(--wiki-blue);margin:10px 0;padding:8px 12px;
+    background:#f8f9fa;color:#54595d;font-style:italic;
+  }
+  .body-code,.rich-text pre{
+    background:#f8f9fa;border:1px solid #c8ccd1;border-radius:4px;padding:10px;
+    overflow:auto;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;
+  }
+  .section-builder-tools,.ib-builder-tools{
+    display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;
+  }
+  .mini-builder-btn{
+    border:1px solid #a2a9b1;background:#fff;border-radius:3px;color:var(--wiki-blue);
+    padding:4px 7px;font-size:11px;cursor:pointer;font-family:var(--sans);
+  }
+  .mini-builder-btn:hover{background:#eef4ff}
+  .drag-handle{
+    display:none;cursor:grab;color:#72777d;font-size:14px;line-height:1;
+    user-select:none;padding:3px 5px;border-radius:3px;flex:none;touch-action:none;
+  }
+  .editing .drag-handle{display:inline-flex}
+  .editing .drag-handle:hover{background:#eaecf0}
+  .move-btns{display:none;gap:2px;flex:none;}
+  .editing .move-btns{display:inline-flex;}
+  .move-btn{
+    border:1px solid #a2a9b1;background:#fff;color:#54595d;font-size:10px;line-height:1;
+    padding:3px 5px;border-radius:3px;cursor:pointer;font-family:var(--sans);
+  }
+  .move-btn:hover{background:#eef4ff;border-color:var(--wiki-blue);color:var(--wiki-blue);}
+  .move-btn:disabled{opacity:.3;cursor:default;background:#fff;color:#54595d;border-color:#a2a9b1;}
+  .dragging{opacity:.45}
+  .drop-target{outline:2px dashed var(--wiki-blue)!important;outline-offset:-2px}
+  .drop-before{border-top:4px solid var(--wiki-blue)!important}
+  .drop-after{border-bottom:4px solid var(--wiki-blue)!important}
+  .section-block,.body-block{user-select:text}
+  .section-content.collapsed{display:none}
+  .drop-marker{
+    height:6px;margin:3px 0;border:1px dashed var(--wiki-blue);background:#eef4ff;border-radius:3px;
+  }
+  .section-tools{
+    display:flex;gap:4px;align-items:center;margin:4px 0 8px;
+  }
+  .section-tools .drag-handle{display:none}
+  .editing .section-tools .drag-handle{display:inline-flex}
+  .body-block{position:relative;margin-bottom:10px}
+  .body-block .block-del{
+    position:absolute;top:3px;right:3px;display:none;border:1px solid #d33;color:#d33;background:#fff;
+    border-radius:3px;font-size:10px;padding:2px 5px;cursor:pointer;z-index:2;
+  }
+  .editing .body-block .block-del{display:block;opacity:.6}
+  .editing .body-block:hover .block-del{opacity:1}
+  .body-block img{max-width:100%;height:auto;display:block}
+  .body-image{margin:10px 0}
+  .body-image-inner{max-width:520px}
+  .body-image figcaption{font-size:12px;color:var(--gray);text-align:center;padding-top:3px}
+  .body-image.small .body-image-inner{max-width:300px}
+  .body-image.center .body-image-inner{margin:0 auto}
+  .body-table-wrap{overflow:auto}
+  .body-table{border-collapse:collapse;width:100%;font-size:13px}
+  .body-table th,.body-table td{border:1px solid #a2a9b1;padding:6px}
+  .body-table th{background:#eaecf0;font-weight:700}
+  .body-notice{
+    border:1px solid #a2a9b1;border-left:5px solid #36c;background:#f8f9fa;padding:10px 12px;
+  }
+  .body-notice.warning{border-left-color:#a66e00;background:#fef6e7}
+  .body-infobox{
+    max-width:420px;border:1px solid var(--wiki-border);background:#fff;margin:12px 0;
+    font-family:var(--sans);font-size:13px;
+  }
+  .body-infobox .bi-title{font-weight:700;text-align:center;background:#eaecf0;padding:7px}
+  .body-infobox .bi-row{display:grid;grid-template-columns:38% 1fr;border-top:1px solid #e2e2e2}
+  .body-infobox .bi-row>div{padding:6px}
+  .body-infobox .bi-row>div:first-child{font-weight:700}
+  .section-header h2{font-size:22px}
+  .editing .section-header h2,.editing .page-title,.editing .page-desc{cursor:text}
+  .editing [contenteditable="true"]{caret-color:var(--wiki-blue)}
+  .infobox,.ib-title,.ib-section,.ib-row,.ib-twocol,.ib-list,.ib-imggrid,.ib-scoreline{
+    font-family:var(--sans) !important;
+  }
+  .infobox .ib-title{font-family:var(--sans) !important;font-weight:700}
+  .ib-label,.ib-value,.ib-section,.ib-list,.ib-caption,.ib-scoreline,.ib-twocol div{font-family:var(--sans)}
+  .builder-pop{
+    position:fixed;right:18px;bottom:18px;z-index:120;background:#fff;border:1px solid #a2a9b1;
+    border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;display:none;max-width:360px;
+  }
+  .builder-pop.open{display:block}
+  .builder-pop h3{margin:0 0 7px;font-size:14px}
+  .builder-pop .builder-row{display:flex;gap:6px;flex-wrap:wrap}
+  .builder-pop button{font-family:var(--sans);font-size:12px;padding:5px 7px}
+
 </style>
 </head>
 <body>
@@ -238,8 +387,25 @@
   <span class="label">Wikipédia Editor:</span>
   <button class="tbtn" id="btnNew">📄 Nova página</button>
   <button class="tbtn" id="btnSaveAs">💾 Salvar página</button>
+  <button class="tbtn" id="btnDuplicate">🧬 Duplicar página</button>
   <button class="tbtn" id="btnMyPages">🗂️ Minhas páginas</button>
   <button class="tbtn" id="btnDownload">⬇️ Baixar HTML</button>
+  <button class="tbtn" id="btnExport">📤 Exportar JSON</button>
+  <button class="tbtn" id="btnImport">📥 Importar JSON</button>
+  <select id="bannerSelect" class="hidden" title="Aviso de manutenção no topo do artigo"></select>
+  <span class="save-status" id="saveStatus"></span>
+  <div class="format-toolbar hidden" id="formatToolbar" title="Selecione um texto e clique em um botão para formatá-lo">
+    <button class="fmt-btn" data-cmd="bold" title="Negrito"><b>B</b></button>
+    <button class="fmt-btn" data-cmd="italic" title="Itálico"><i>I</i></button>
+    <button class="fmt-btn" data-cmd="underline" title="Sublinhado"><u>U</u></button>
+    <button class="fmt-btn" data-cmd="strikeThrough" title="Tachado"><s>S</s></button>
+    <button class="fmt-btn" data-cmd="insertUnorderedList" title="Lista com marcadores">• Lista</button>
+    <button class="fmt-btn" data-cmd="insertOrderedList" title="Lista numerada">1. Lista</button>
+    <button class="fmt-btn" id="btnLink" title="Transforma o texto selecionado em link azul (ou cria um link novo, se nada estiver selecionado)">🔗 Link azul</button>
+    <button class="fmt-btn" id="btnBlockquote" title="Transforma o parágrafo atual em citação">❝ Citação</button>
+    <button class="fmt-btn" id="btnPre" title="Transforma o parágrafo atual em bloco de código">{ } Código</button>
+    <button class="fmt-btn" id="btnClearFormat" title="Remove toda formatação e links do texto selecionado">✕ Limpar</button>
+  </div>
   <div class="mode-pill">
     <button id="btnRead" class="active">Ler</button>
     <button id="btnEdit">Editar</button>
@@ -247,10 +413,14 @@
 </div>
 
 <main class="wiki-article">
+  <div id="articleBanner"></div>
   <h1 class="page-title" id="pageTitle"></h1>
   <p class="page-desc" id="pageDesc"></p>
   <div class="content-wrap">
-    <div class="article-body" id="articleBody"></div>
+    <div class="article-body" id="articleBody">
+      <div id="articleToc"></div>
+      <div id="articleSections"></div>
+    </div>
     <div class="infobox" id="infobox"></div>
   </div>
   <div id="addSectionWrap" class="hidden">
@@ -264,7 +434,7 @@
 </footer>
 
 <div class="badge">🛠️ Editor não-oficial — projeto paródia</div>
-<input type="file" accept="image/*" class="file-input" id="fileInput">
+<input type="file" accept="image/*" class="file-input" id="fileInput">\n<input type="file" accept=".json,application/json" class="file-input" id="jsonInput">
 
 <!-- TEMPLATE PICKER MODAL -->
 <div class="modal-overlay" id="templateModal">
@@ -272,7 +442,9 @@
     <h2>Criar uma página</h2>
     <p class="sub">Escolha um modelo pronto de infobox ou comece do zero.</p>
     <div id="draftBannerWrap"></div>
+    <input type="text" class="template-search" id="templateSearch" placeholder="🔎 Buscar modelo (ex: filme, país, animal...)">
     <div class="template-grid" id="templateGrid"></div>
+    <p class="empty-note hidden" id="templateEmptyNote">Nenhum modelo encontrado com esse termo.</p>
   </div>
 </div>
 
@@ -408,7 +580,547 @@ function T(){ return {
       {t:'row', label:'Público', value:'0'}
     ],
     body:[{heading:null, text:'Escreva aqui o resumo da partida.'}]
+  },
+  animal: {
+    emoji:'🐾', name:'Animal / Espécie', desc:'Ficha de classificação biológica, como uma espécie animal ou vegetal.',
+    title:'Nome da Espécie', subtitle:'Nome científico Autor, ano',
+    infobox:[
+      {t:'title', text:'Nome popular'},
+      {t:'imggrid', items:[{src:null,caption:'Legenda da imagem'}]},
+      {t:'section', text:'Classificação científica'},
+      {t:'row', label:'Reino', value:'Animalia'},
+      {t:'row', label:'Filo', value:'Chordata'},
+      {t:'row', label:'Classe', value:'Mammalia'},
+      {t:'row', label:'Ordem', value:'Ordem'},
+      {t:'row', label:'Família', value:'Família'},
+      {t:'row', label:'Gênero', value:'Gênero'},
+      {t:'row', label:'Espécie', value:'Nome científico'},
+      {t:'section', text:'Estado de conservação'},
+      {t:'row', label:'Situação', value:'Ex: Pouco preocupante (IUCN)'},
+      {t:'row', label:'Distribuição', value:'Onde a espécie é encontrada'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a espécie.'},{heading:'Características', text:'Descrição física e comportamento.'},{heading:'Habitat', text:'Onde a espécie vive.'}]
+  },
+  filme: {
+    emoji:'🎬', name:'Filme', desc:'Ficha técnica de filme com direção, elenco, duração e bilheteria.',
+    title:'Nome do Filme', subtitle:'ano de lançamento',
+    infobox:[
+      {t:'title', text:'Nome do Filme'},
+      {t:'imggrid', items:[{src:null,caption:'Cartaz do filme'}]},
+      {t:'row', label:'Direção', value:'Nome do diretor'},
+      {t:'row', label:'Produção', value:'Nome do produtor'},
+      {t:'row', label:'Roteiro', value:'Nome do roteirista'},
+      {t:'list', label:'Elenco', items:['Ator 1','Ator 2']},
+      {t:'row', label:'Música', value:'Compositor da trilha'},
+      {t:'row', label:'Produtora', value:'Estúdio'},
+      {t:'row', label:'Lançamento', value:'dd de mês de aaaa'},
+      {t:'row', label:'Duração', value:'000 minutos'},
+      {t:'row', label:'País', value:'País de origem'},
+      {t:'row', label:'Idioma', value:'Idioma original'},
+      {t:'row', label:'Orçamento', value:'US$ 0'},
+      {t:'row', label:'Receita', value:'US$ 0'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a sinopse do filme.'},{heading:'Enredo', text:'Descrição da trama.'},{heading:'Recepção', text:'Crítica e desempenho de bilheteria.'}]
+  },
+  album: {
+    emoji:'🎵', name:'Álbum / Música', desc:'Ficha de álbum ou canção com artista, gênero, gravadora e duração.',
+    title:'Nome do Álbum', subtitle:'álbum de estúdio de Nome do Artista',
+    infobox:[
+      {t:'title', text:'Nome do Álbum'},
+      {t:'imggrid', items:[{src:null,caption:'Capa do álbum'}]},
+      {t:'row', label:'Artista', value:'Nome do artista'},
+      {t:'row', label:'Lançamento', value:'dd de mês de aaaa'},
+      {t:'row', label:'Gravado', value:'Nome do estúdio, ano'},
+      {t:'row', label:'Gênero(s)', value:'Ex: Pop, Rock'},
+      {t:'row', label:'Duração', value:'00:00'},
+      {t:'row', label:'Gravadora', value:'Nome da gravadora'},
+      {t:'row', label:'Produção', value:'Nome do produtor'},
+      {t:'list', label:'Faixas', items:['1. Nome da faixa','2. Nome da faixa']}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o álbum.'},{heading:'Faixas', text:'Descrição das faixas e produção.'},{heading:'Recepção', text:'Crítica especializada e desempenho comercial.'}]
+  },
+  empresa: {
+    emoji:'🏢', name:'Empresa', desc:'Ficha corporativa com fundação, sede, fundadores, receita e produtos.',
+    title:'Nome da Empresa', subtitle:'ramo de atuação',
+    infobox:[
+      {t:'title', text:'Nome da Empresa'},
+      {t:'imggrid', items:[{src:null,caption:'Logotipo'}]},
+      {t:'row', label:'Nome nativo', value:'Nome original, se houver'},
+      {t:'row', label:'Tipo', value:'Ex: Sociedade anônima'},
+      {t:'row', label:'Fundação', value:'dd de mês de aaaa, Cidade'},
+      {t:'row', label:'Fundador(es)', value:'Nome do(s) fundador(es)'},
+      {t:'row', label:'Sede', value:'Cidade, País'},
+      {t:'row', label:'Área de atuação', value:'Ex: Mundial'},
+      {t:'row', label:'Pessoas-chave', value:'Ex: Nome, CEO'},
+      {t:'row', label:'Produtos', value:'Principais produtos/serviços'},
+      {t:'row', label:'Receita', value:'US$ 0'},
+      {t:'row', label:'Funcionários', value:'0'},
+      {t:'row', label:'Website', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a empresa.'},{heading:'História', text:'Como a empresa foi fundada e sua trajetória.'},{heading:'Produtos e serviços', text:'O que a empresa oferece.'}]
+  },
+  cidade: {
+    emoji:'🏙️', name:'Cidade', desc:'Ficha municipal com estado, população, área, prefeito e fundação.',
+    title:'Nome da Cidade', subtitle:'município do Estado, País',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Vista da cidade'},{src:null,caption:'Brasão'}]},
+      {t:'row', label:'Estado', value:'Nome do estado'},
+      {t:'row', label:'Região', value:'Nome da região'},
+      {t:'row', label:'Fundação', value:'dd de mês de aaaa'},
+      {t:'row', label:'Prefeito(a)', value:'Nome do(a) prefeito(a)'},
+      {t:'row', label:'Área', value:'Ex: 1.500 km²'},
+      {t:'row', label:'População', value:'Ex: 200.000 (ano)'},
+      {t:'row', label:'Densidade', value:'Ex: 130 hab./km²'},
+      {t:'row', label:'Fuso horário', value:'Ex: UTC-3'},
+      {t:'row', label:'CEP', value:'00000-000'},
+      {t:'row', label:'IDH', value:'0,000 (ano)'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a cidade.'},{heading:'Geografia', text:'Localização, clima e relevo.'},{heading:'Economia', text:'Principais atividades econômicas.'}]
+  },
+  livro: {
+    emoji:'📚', name:'Livro', desc:'Ficha literária com autor, editora, gênero, páginas e ISBN.',
+    title:'Nome do Livro', subtitle:'romance / conto / ensaio',
+    infobox:[
+      {t:'title', text:'Nome do Livro'},
+      {t:'imggrid', items:[{src:null,caption:'Capa da primeira edição'}]},
+      {t:'row', label:'Autor(a)', value:'Nome do autor'},
+      {t:'row', label:'País', value:'País de origem'},
+      {t:'row', label:'Idioma', value:'Idioma original'},
+      {t:'row', label:'Gênero', value:'Ex: Romance'},
+      {t:'row', label:'Editora', value:'Nome da editora'},
+      {t:'row', label:'Lançamento', value:'aaaa'},
+      {t:'row', label:'Páginas', value:'000'},
+      {t:'row', label:'ISBN', value:'000-0-000-00000-0'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o livro.'},{heading:'Enredo', text:'Resumo da história, sem revelar o final.'},{heading:'Recepção', text:'Crítica especializada e prêmios.'}]
+  },
+  universidade: {
+    emoji:'🎓', name:'Universidade', desc:'Ficha acadêmica com reitor, fundação, alunos e campus.',
+    title:'Nome da Universidade', subtitle:'instituição de ensino superior',
+    infobox:[
+      {t:'title', text:'Nome da Universidade'},
+      {t:'imggrid', items:[{src:null,caption:'Brasão / campus'}]},
+      {t:'row', label:'Lema', value:'Lema institucional'},
+      {t:'row', label:'Tipo', value:'Ex: Pública / Privada'},
+      {t:'row', label:'Fundação', value:'dd de mês de aaaa'},
+      {t:'row', label:'Reitor(a)', value:'Nome do(a) reitor(a)'},
+      {t:'row', label:'Localização', value:'Cidade, País'},
+      {t:'row', label:'Campus', value:'Ex: Urbano'},
+      {t:'row', label:'Estudantes', value:'0'},
+      {t:'row', label:'Docentes', value:'0'},
+      {t:'row', label:'Website', value:'www.exemplo.edu'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a universidade.'},{heading:'História', text:'Fundação e principais marcos.'},{heading:'Cursos', text:'Áreas de ensino e pesquisa.'}]
+  },
+  videogame: {
+    emoji:'🎮', name:'Jogo eletrônico', desc:'Ficha de videogame com desenvolvedora, plataformas e modos de jogo.',
+    title:'Nome do Jogo', subtitle:'jogo eletrônico de aaaa',
+    infobox:[
+      {t:'title', text:'Nome do Jogo'},
+      {t:'imggrid', items:[{src:null,caption:'Capa do jogo'}]},
+      {t:'row', label:'Desenvolvedora', value:'Nome do estúdio'},
+      {t:'row', label:'Distribuidora', value:'Nome da distribuidora'},
+      {t:'row', label:'Diretor(a)', value:'Nome do diretor'},
+      {t:'row', label:'Motor de jogo', value:'Nome da engine'},
+      {t:'row', label:'Plataforma(s)', value:'Ex: PC, PlayStation, Xbox'},
+      {t:'row', label:'Lançamento', value:'dd de mês de aaaa'},
+      {t:'row', label:'Gênero(s)', value:'Ex: Aventura, RPG'},
+      {t:'row', label:'Modos de jogo', value:'Ex: Um jogador, multijogador'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o jogo.'},{heading:'Jogabilidade', text:'Como o jogo funciona.'},{heading:'Desenvolvimento', text:'Como o jogo foi criado.'},{heading:'Recepção', text:'Crítica especializada e vendas.'}]
+  },
+  banda: {
+    emoji:'🎸', name:'Banda / Grupo musical', desc:'Ficha de banda com integrantes, gênero, gravadora e anos ativos.',
+    title:'Nome da Banda', subtitle:'banda de [gênero musical]',
+    infobox:[
+      {t:'title', text:'Nome da Banda'},
+      {t:'imggrid', items:[{src:null,caption:'Foto da banda'}]},
+      {t:'row', label:'Origem', value:'Cidade, País'},
+      {t:'row', label:'Gênero(s)', value:'Ex: Rock, Pop'},
+      {t:'row', label:'Anos ativos', value:'aaaa–presente'},
+      {t:'row', label:'Gravadora(s)', value:'Nome da gravadora'},
+      {t:'list', label:'Integrantes', items:['Nome 1 — instrumento','Nome 2 — instrumento']},
+      {t:'row', label:'Site oficial', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a banda.'},{heading:'Carreira', text:'Formação e trajetória da banda.'},{heading:'Discografia', text:'Principais álbuns lançados.'}]
+  },
+  serie: {
+    emoji:'📺', name:'Série de TV', desc:'Ficha de série com elenco, temporadas, episódios e emissora.',
+    title:'Nome da Série', subtitle:'série de televisão',
+    infobox:[
+      {t:'title', text:'Nome da Série'},
+      {t:'imggrid', items:[{src:null,caption:'Cartaz da série'}]},
+      {t:'row', label:'Gênero', value:'Ex: Drama, Comédia'},
+      {t:'row', label:'Criado por', value:'Nome do(a) criador(a)'},
+      {t:'list', label:'Elenco', items:['Ator 1','Ator 2']},
+      {t:'row', label:'País de origem', value:'País'},
+      {t:'row', label:'Idioma original', value:'Idioma'},
+      {t:'row', label:'Temporadas', value:'0'},
+      {t:'row', label:'Episódios', value:'0'},
+      {t:'row', label:'Duração', value:'00 min por episódio'},
+      {t:'row', label:'Emissora original', value:'Nome do canal/streaming'},
+      {t:'row', label:'Exibição original', value:'dd de mês de aaaa – presente'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a série.'},{heading:'Enredo', text:'Resumo da trama.'},{heading:'Elenco e personagens', text:'Descrição dos personagens principais.'},{heading:'Recepção', text:'Crítica especializada e audiência.'}]
+  },
+  app: {
+    emoji:'📱', name:'Aplicativo / Software', desc:'Ficha técnica de app ou programa com versão, plataforma e licença.',
+    title:'Nome do Aplicativo', subtitle:'aplicativo / software',
+    infobox:[
+      {t:'title', text:'Nome do Aplicativo'},
+      {t:'imggrid', items:[{src:null,caption:'Ícone do aplicativo'}]},
+      {t:'row', label:'Desenvolvedor(a)', value:'Nome da empresa/pessoa'},
+      {t:'row', label:'Lançamento inicial', value:'dd de mês de aaaa'},
+      {t:'row', label:'Versão estável', value:'0.0.0'},
+      {t:'row', label:'Sistema operacional', value:'Ex: Windows, iOS, Android'},
+      {t:'row', label:'Plataforma', value:'Ex: Web, Desktop, Mobile'},
+      {t:'row', label:'Licença', value:'Ex: Proprietária, código aberto'},
+      {t:'row', label:'Idiomas', value:'Ex: Português, Inglês'},
+      {t:'row', label:'Categoria', value:'Ex: Produtividade'},
+      {t:'row', label:'Site oficial', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o aplicativo.'},{heading:'Funcionalidades', text:'Principais recursos oferecidos.'},{heading:'Histórico de versões', text:'Principais atualizações lançadas.'}]
+  },
+  marca: {
+    emoji:'🏷️', name:'Marca / Produto', desc:'Ficha de marca comercial com tipo, proprietário e mercados.',
+    title:'Nome da Marca', subtitle:'marca comercial',
+    infobox:[
+      {t:'title', text:'Nome da Marca'},
+      {t:'imggrid', items:[{src:null,caption:'Logotipo'}]},
+      {t:'row', label:'Tipo', value:'Ex: Bebida, vestuário, eletrônico'},
+      {t:'row', label:'País', value:'País de origem'},
+      {t:'row', label:'Introduzida em', value:'aaaa'},
+      {t:'row', label:'Proprietário', value:'Nome da empresa'},
+      {t:'row', label:'Mercados', value:'Ex: Mundial'},
+      {t:'row', label:'Site oficial', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a marca.'},{heading:'História', text:'Origem e evolução da marca.'},{heading:'Produtos', text:'Principais linhas de produto.'}]
+  },
+  doenca: {
+    emoji:'🩺', name:'Doença / Condição médica', desc:'Ficha médica com sintomas, causas e tratamento (uso fictício/didático).',
+    title:'Nome da Condição', subtitle:'condição médica',
+    infobox:[
+      {t:'title', text:'Nome da Condição'},
+      {t:'section', text:'Classificação e recursos'},
+      {t:'row', label:'Especialidade', value:'Ex: Cardiologia'},
+      {t:'row', label:'Sintomas', value:'Descrição dos sintomas comuns'},
+      {t:'row', label:'Início habitual', value:'Ex: Na infância'},
+      {t:'row', label:'Duração', value:'Ex: Crônica, aguda'},
+      {t:'row', label:'Causas', value:'Fatores associados'},
+      {t:'row', label:'Método de diagnóstico', value:'Como é diagnosticada'},
+      {t:'row', label:'Tratamento', value:'Abordagens gerais (não é aconselhamento médico)'},
+      {t:'row', label:'Frequência', value:'Prevalência estimada'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a condição (conteúdo fictício/educativo; não substitui orientação médica real).'},{heading:'Sinais e sintomas', text:'Descrição dos sintomas.'},{heading:'Causas', text:'Fatores de risco e causas.'}]
+  },
+  rio: {
+    emoji:'🏞️', name:'Rio', desc:'Ficha geográfica de rio com nascente, foz, comprimento e afluentes.',
+    title:'Nome do Rio', subtitle:'rio de [região/país]',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Foto do rio'}]},
+      {t:'row', label:'País(es)', value:'País(es) que atravessa'},
+      {t:'row', label:'Nascente', value:'Local de nascimento do rio'},
+      {t:'row', label:'Foz', value:'Onde o rio deságua'},
+      {t:'row', label:'Comprimento', value:'Ex: 1.200 km'},
+      {t:'row', label:'Área da bacia', value:'Ex: 50.000 km²'},
+      {t:'row', label:'Afluentes', value:'Principais afluentes'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o rio.'},{heading:'Curso', text:'Percurso do rio desde a nascente até a foz.'},{heading:'Importância econômica', text:'Uso do rio pelas populações ribeirinhas.'}]
+  },
+  montanha: {
+    emoji:'⛰️', name:'Montanha', desc:'Ficha geográfica com altitude, proeminência e cordilheira.',
+    title:'Nome da Montanha', subtitle:'montanha em [região/país]',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Foto da montanha'}]},
+      {t:'row', label:'Altitude', value:'Ex: 3.000 m'},
+      {t:'row', label:'Proeminência', value:'Ex: 1.500 m'},
+      {t:'row', label:'Localização', value:'Região, País'},
+      {t:'row', label:'Cordilheira', value:'Nome da cordilheira'},
+      {t:'row', label:'Primeira ascensão', value:'aaaa, por Nome'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a montanha.'},{heading:'Geologia', text:'Formação geológica.'},{heading:'Escaladas', text:'Rotas e histórico de escaladas.'}]
+  },
+  ilha: {
+    emoji:'🏝️', name:'Ilha', desc:'Ficha geográfica de ilha com área, população e arquipélago.',
+    title:'Nome da Ilha', subtitle:'ilha de [região/país]',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Mapa ou foto da ilha'}]},
+      {t:'row', label:'País', value:'País ao qual pertence'},
+      {t:'row', label:'Arquipélago', value:'Nome do arquipélago, se houver'},
+      {t:'row', label:'Área', value:'Ex: 100 km²'},
+      {t:'row', label:'População', value:'Ex: 5.000 (ano)'},
+      {t:'row', label:'Ponto mais alto', value:'Nome e altitude'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a ilha.'},{heading:'Geografia', text:'Relevo, clima e ecossistema.'},{heading:'História', text:'Povoamento e fatos históricos.'}]
+  },
+  ponte: {
+    emoji:'🌉', name:'Ponte / Monumento', desc:'Ficha de ponte ou monumento com localização, tipo e inauguração.',
+    title:'Nome da Ponte', subtitle:'ponte / monumento',
+    infobox:[
+      {t:'title', text:'Nome da Ponte'},
+      {t:'imggrid', items:[{src:null,caption:'Foto da ponte'}]},
+      {t:'row', label:'Localização', value:'Cidade, País'},
+      {t:'row', label:'Cruza', value:'Rio, baía ou vale que atravessa'},
+      {t:'row', label:'Tipo', value:'Ex: Pênsil, estaiada, arco'},
+      {t:'row', label:'Comprimento', value:'Ex: 1.000 m'},
+      {t:'row', label:'Material', value:'Ex: Aço, concreto'},
+      {t:'row', label:'Inauguração', value:'dd de mês de aaaa'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a ponte.'},{heading:'História', text:'Construção e contexto histórico.'},{heading:'Características', text:'Detalhes técnicos e arquitetônicos.'}]
+  },
+  premio: {
+    emoji:'🏆', name:'Prêmio', desc:'Ficha de premiação com categorias, entidade organizadora e vencedores.',
+    title:'Nome do Prêmio', subtitle:'prêmio anual de [área]',
+    infobox:[
+      {t:'title', text:'Nome do Prêmio'},
+      {t:'imggrid', items:[{src:null,caption:'Troféu / símbolo do prêmio'}]},
+      {t:'row', label:'País', value:'País de origem'},
+      {t:'row', label:'Apresentado por', value:'Entidade organizadora'},
+      {t:'row', label:'Primeira entrega', value:'aaaa'},
+      {t:'row', label:'Categoria(s)', value:'Principais categorias'},
+      {t:'row', label:'Detentor atual', value:'Nome do vencedor mais recente'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o prêmio.'},{heading:'Categorias', text:'Descrição das categorias premiadas.'},{heading:'Vencedores notáveis', text:'Lista de vencedores marcantes.'}]
+  },
+  torneio: {
+    emoji:'🏅', name:'Torneio / Campeonato', desc:'Ficha de competição esportiva com formato, equipes e campeão atual.',
+    title:'Nome do Torneio', subtitle:'competição esportiva',
+    infobox:[
+      {t:'title', text:'Nome do Torneio'},
+      {t:'imggrid', items:[{src:null,caption:'Logo do torneio'}]},
+      {t:'row', label:'Esporte', value:'Ex: Futebol, Vôlei'},
+      {t:'row', label:'Fundação', value:'aaaa'},
+      {t:'row', label:'Número de equipes', value:'0'},
+      {t:'row', label:'País(es)', value:'País(es) participante(s)'},
+      {t:'row', label:'Atual campeão', value:'Nome da equipe/atleta'},
+      {t:'row', label:'Site oficial', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o torneio.'},{heading:'Formato', text:'Como funciona a competição.'},{heading:'Histórico', text:'Edições anteriores e campeões.'}]
+  },
+  lingua: {
+    emoji:'🗣️', name:'Língua', desc:'Ficha linguística com falantes, família e sistema de escrita.',
+    title:'Nome da Língua', subtitle:'língua falada em [região]',
+    infobox:[
+      {t:'title', text:'Nome da Língua'},
+      {t:'row', label:'Falado em', value:'País(es)'},
+      {t:'row', label:'Região', value:'Região onde é falada'},
+      {t:'row', label:'Falantes', value:'Ex: 10 milhões'},
+      {t:'row', label:'Família linguística', value:'Ex: Indo-europeia'},
+      {t:'row', label:'Sistema de escrita', value:'Ex: Alfabeto latino'},
+      {t:'row', label:'Estatuto oficial', value:'Onde é língua oficial'},
+      {t:'row', label:'Códigos de língua', value:'Ex: ISO 639-1: xx'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a língua.'},{heading:'Fonologia', text:'Sons e pronúncia característicos.'},{heading:'Gramática', text:'Estrutura gramatical básica.'}]
+  },
+  partido: {
+    emoji:'🏛️', name:'Partido político', desc:'Ficha de partido com líder, ideologia e espectro político.',
+    title:'Nome do Partido', subtitle:'sigla — partido político',
+    infobox:[
+      {t:'title', text:'Nome do Partido'},
+      {t:'imggrid', items:[{src:null,caption:'Logotipo'}]},
+      {t:'row', label:'Líder', value:'Nome do(a) líder'},
+      {t:'row', label:'Fundação', value:'dd de mês de aaaa'},
+      {t:'row', label:'Sede', value:'Cidade, País'},
+      {t:'row', label:'Ideologia', value:'Ex: Descrição ideológica'},
+      {t:'row', label:'Espectro político', value:'Ex: Centro'},
+      {t:'row', label:'Membros', value:'Ex: 100.000 (ano)'},
+      {t:'row', label:'Site oficial', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o partido.'},{heading:'História', text:'Fundação e trajetória do partido.'},{heading:'Ideologia', text:'Principais posições e propostas.'}]
+  },
+  missao_espacial: {
+    emoji:'🚀', name:'Missão espacial', desc:'Ficha de missão espacial com foguete, lançamento e objetivos.',
+    title:'Nome da Missão', subtitle:'missão espacial',
+    infobox:[
+      {t:'title', text:'Nome da Missão'},
+      {t:'imggrid', items:[{src:null,caption:'Foto do lançamento / logo da missão'}]},
+      {t:'row', label:'Operador', value:'Nome da agência/empresa'},
+      {t:'row', label:'Tipo de missão', value:'Ex: Órbita, exploração'},
+      {t:'row', label:'Foguete', value:'Nome do veículo lançador'},
+      {t:'row', label:'Local de lançamento', value:'Nome do centro espacial'},
+      {t:'row', label:'Data de lançamento', value:'dd de mês de aaaa'},
+      {t:'row', label:'Duração', value:'Ex: 6 meses'},
+      {t:'row', label:'Destino', value:'Ex: Órbita da Terra, Lua, Marte'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a missão.'},{heading:'Objetivos', text:'O que a missão pretende realizar.'},{heading:'Resultado', text:'Desfecho da missão.'}]
+  },
+  veiculo: {
+    emoji:'🚗', name:'Veículo / Carro', desc:'Ficha técnica de veículo com fabricante, motor e produção.',
+    title:'Nome do Veículo', subtitle:'modelo de automóvel',
+    infobox:[
+      {t:'title', text:'Nome do Veículo'},
+      {t:'imggrid', items:[{src:null,caption:'Foto do veículo'}]},
+      {t:'row', label:'Fabricante', value:'Nome da montadora'},
+      {t:'row', label:'Também chamado', value:'Nomes alternativos'},
+      {t:'row', label:'Produção', value:'aaaa–presente'},
+      {t:'row', label:'Montagem', value:'Cidade, País'},
+      {t:'row', label:'Categoria', value:'Ex: Hatch, SUV, sedã'},
+      {t:'row', label:'Motor', value:'Ex: 1.0 flex'},
+      {t:'row', label:'Transmissão', value:'Ex: Manual, automática'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o veículo.'},{heading:'Histórico', text:'Gerações e principais mudanças.'},{heading:'Especificações', text:'Detalhes técnicos do modelo.'}]
+  },
+  personagem: {
+    emoji:'🦸', name:'Personagem fictício', desc:'Modelo para personagens de filmes, jogos, quadrinhos e histórias.',
+    title:'Nome do Personagem', subtitle:'personagem fictício de [obra]',
+    infobox:[
+      {t:'title', text:'Nome do Personagem'},
+      {t:'image', src:null, caption:'Aparência do personagem'},
+      {t:'row', label:'Primeira aparição', value:'Obra, ano'},
+      {t:'row', label:'Criado por', value:'Autor(es)'},
+      {t:'row', label:'Espécie', value:'Humano / etc.'},
+      {t:'row', label:'Ocupação', value:'Ocupação'},
+      {t:'row', label:'Afiliações', value:'Equipe / grupo'},
+      {t:'section', text:'Informações fictícias'},
+      {t:'row', label:'Status', value:'Ativo / morto / etc.'}
+    ],
+    body:[
+      {heading:null, text:'Introdução do personagem.', blocks:[{type:'text',html:'Introdução do personagem.'},{type:'image',src:null,caption:'Legenda'}]},
+      {heading:'História', text:'História do personagem.', blocks:[{type:'text',html:'História do personagem.'},{type:'quote',html:'Uma citação marcante.'}]},
+      {heading:'Características', text:'Características e relações.', blocks:[{type:'text',html:'Características e relações.'},{type:'infobox',title:'Relações',rows:[{label:'Aliados',value:'Nome'},{label:'Inimigos',value:'Nome'}]}]}
+    ]
+  },
+  local: {
+    emoji:'📍', name:'Lugar / Local histórico', desc:'Template para cidades, prédios, locais históricos e pontos de interesse.',
+    title:'Nome do Local', subtitle:'local histórico em [cidade/país]',
+    infobox:[
+      {t:'title', text:'Nome do Local'},
+      {t:'imggrid', items:[{src:null,caption:'Vista principal'},{src:null,caption:'Mapa / planta'}]},
+      {t:'row', label:'Localização', value:'Cidade, País'},
+      {t:'row', label:'Tipo', value:'Tipo de local'},
+      {t:'row', label:'Construção', value:'aaaa'},
+      {t:'row', label:'Inauguração', value:'dd de mês de aaaa'},
+      {t:'row', label:'Arquiteto(a)', value:'Nome'},
+      {t:'row', label:'Estado atual', value:'Preservado / demolido / etc.'}
+    ],
+    body:[
+      {heading:null, text:'Introdução sobre o local.'},
+      {heading:'História', text:'Histórico e acontecimentos associados.'},
+      {heading:'Arquitetura', text:'Descrição arquitetônica.', blocks:[{type:'text',html:'Descrição arquitetônica.'},{type:'gallery',items:[{src:null,caption:'Detalhe 1'},{src:null,caption:'Detalhe 2'}]}]}
+    ]
+  },
+  navio: {
+    emoji:'🚢', name:'Navio / Embarcação', desc:'Ficha técnica para navios, submarinos e outras embarcações.',
+    title:'Nome da Embarcação', subtitle:'navio de [classe / país]',
+    infobox:[
+      {t:'title', text:'Nome do Navio'},
+      {t:'image', src:null, caption:'Navio em [ano]'},
+      {t:'row', label:'Classe', value:'Nome da classe'},
+      {t:'row', label:'Operador', value:'Marinha / empresa'},
+      {t:'row', label:'Lançamento', value:'aaaa'},
+      {t:'row', label:'Entrada em serviço', value:'aaaa'},
+      {t:'row', label:'Deslocamento', value:'000 t'},
+      {t:'row', label:'Comprimento', value:'000 m'},
+      {t:'row', label:'Tripulação', value:'000'}
+    ],
+    body:[{heading:null,text:'Introdução sobre a embarcação.'},{heading:'História operacional',text:'Serviço e principais acontecimentos.'},{heading:'Características',text:'Especificações técnicas.'}]
+  },
+  conflito: {
+    emoji:'🗺️', name:'Conflito histórico', desc:'Template mais amplo para guerras, revoluções e crises políticas.',
+    title:'Nome do Conflito', subtitle:'conflito ocorrido entre aaaa e aaaa',
+    infobox:[
+      {t:'title',text:'Nome do Conflito'},
+      {t:'imggrid',items:[{src:null,caption:'Mapa do conflito'},{src:null,caption:'Imagem histórica'}]},
+      {t:'row',label:'Data',value:'dd de mês de aaaa – dd de mês de aaaa'},
+      {t:'row',label:'Local',value:'Região / países'},
+      {t:'row',label:'Resultado',value:'Resultado do conflito'},
+      {t:'section',text:'Envolvidos'},
+      {t:'twocol',left:'Lado A',right:'Lado B'},
+      {t:'section',text:'Principais líderes'},
+      {t:'twocol',left:'Líderes do lado A',right:'Líderes do lado B'}
+    ],
+    body:[
+      {heading:null,text:'Introdução e resumo do conflito.'},
+      {heading:'Antecedentes',text:'Contexto político, social e econômico.'},
+      {heading:'Desenvolvimento',text:'Principais fases e acontecimentos.'},
+      {heading:'Consequências',text:'Consequências e legado.'}
+    ]
+  },
+  artigo: {
+    emoji:'📰', name:'Artigo geral', desc:'Modelo flexível com muitos blocos de conteúdo para montar páginas completas.',
+    title:'Título do Artigo', subtitle:'descrição curta do assunto',
+    infobox:[{t:'title',text:'Título'},{t:'image',src:null,caption:'Imagem principal'},{t:'row',label:'Data',value:'dd de mês de aaaa'},{t:'row',label:'Local',value:'Local'},{t:'row',label:'Categoria',value:'Categoria'}],
+    body:[
+      {heading:null,text:'Introdução.',blocks:[{type:'text',html:'Introdução.'},{type:'notice',html:'Esta é uma caixa de aviso. Você pode editar ou remover.'}]},
+      {heading:'Contexto',text:'Contexto.',blocks:[{type:'text',html:'Contexto.'},{type:'image',src:null,caption:'Legenda da imagem',align:'center'}]},
+      {heading:'Informações',text:'Informações adicionais.',blocks:[{type:'infobox',title:'Resumo',rows:[{label:'Campo 1',value:'Valor 1'},{label:'Campo 2',value:'Valor 2'}]},{type:'table',rows:[['Item','Valor'],['Exemplo','100'],['Outro','200']]}]},
+      {heading:'Galeria',text:'Galeria.',blocks:[{type:'gallery',items:[{src:null,caption:'Imagem 1'},{src:null,caption:'Imagem 2'},{src:null,caption:'Imagem 3'}]}]}
+    ]
+  },
+  clube: {
+    emoji:'🏅', name:'Clube esportivo', desc:'Ficha de time ou clube com fundação, mandante, títulos e treinador.',
+    title:'Nome do Clube', subtitle:'clube de [esporte] de [cidade]',
+    infobox:[
+      {t:'title', text:'Nome do Clube'},
+      {t:'imggrid', items:[{src:null,caption:'Escudo'}]},
+      {t:'row', label:'Nome completo', value:'Nome completo do clube'},
+      {t:'row', label:'Fundação', value:'dd de mês de aaaa'},
+      {t:'row', label:'Estádio/Ginásio', value:'Nome da arena'},
+      {t:'row', label:'Capacidade', value:'0'},
+      {t:'row', label:'Presidente', value:'Nome do(a) presidente'},
+      {t:'row', label:'Treinador(a)', value:'Nome do(a) treinador(a)'},
+      {t:'row', label:'Liga', value:'Nome do campeonato'},
+      {t:'list', label:'Títulos', items:['Título 1 (ano)','Título 2 (ano)']}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o clube.'},{heading:'História', text:'Fundação e trajetória do clube.'},{heading:'Títulos e conquistas', text:'Principais títulos conquistados.'}]
+  },
+  festival: {
+    emoji:'🎪', name:'Festival / Evento cultural', desc:'Ficha de festival de música, cinema ou cultura, com edições e local.',
+    title:'Nome do Festival', subtitle:'festival anual de [tipo]',
+    infobox:[
+      {t:'title', text:'Nome do Festival'},
+      {t:'imggrid', items:[{src:null,caption:'Cartaz / logo do festival'}]},
+      {t:'row', label:'Gênero', value:'Ex: Música, cinema, gastronomia'},
+      {t:'row', label:'Local', value:'Cidade, País'},
+      {t:'row', label:'Primeira edição', value:'aaaa'},
+      {t:'row', label:'Periodicidade', value:'Ex: Anual'},
+      {t:'row', label:'Organização', value:'Nome da entidade organizadora'},
+      {t:'row', label:'Público', value:'Ex: 50.000 pessoas'},
+      {t:'row', label:'Site oficial', value:'www.exemplo.com'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o festival.'},{heading:'História', text:'Origem e edições anteriores.'},{heading:'Atrações', text:'Atrações e destaques do evento.'}]
+  },
+  prato: {
+    emoji:'🍽️', name:'Prato / Culinária', desc:'Ficha de prato típico com ingredientes, origem e modo de preparo.',
+    title:'Nome do Prato', subtitle:'prato típico de [região/país]',
+    infobox:[
+      {t:'title', text:'Nome do Prato'},
+      {t:'imggrid', items:[{src:null,caption:'Foto do prato'}]},
+      {t:'row', label:'País de origem', value:'País'},
+      {t:'row', label:'Região', value:'Região associada'},
+      {t:'row', label:'Criado em', value:'Época/ano aproximado'},
+      {t:'list', label:'Ingredientes principais', items:['Ingrediente 1','Ingrediente 2']},
+      {t:'row', label:'Servido', value:'Ex: Quente ou frio'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o prato.'},{heading:'Origem', text:'História e origem do prato.'},{heading:'Preparo', text:'Modo de preparo tradicional.'}]
+  },
+  vulcao: {
+    emoji:'🌋', name:'Vulcão', desc:'Ficha geográfica de vulcão com altitude, tipo e última erupção.',
+    title:'Nome do Vulcão', subtitle:'vulcão em [região/país]',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Foto do vulcão'}]},
+      {t:'row', label:'Altitude', value:'Ex: 3.000 m'},
+      {t:'row', label:'Localização', value:'Região, País'},
+      {t:'row', label:'Cordilheira', value:'Nome da cordilheira, se houver'},
+      {t:'row', label:'Tipo', value:'Ex: Estratovulcão'},
+      {t:'row', label:'Última erupção', value:'aaaa'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o vulcão.'},{heading:'Atividade vulcânica', text:'Histórico de erupções.'},{heading:'Geologia', text:'Formação e composição.'}]
+  },
+  lago: {
+    emoji:'🏔️', name:'Lago', desc:'Ficha geográfica de lago com área, profundidade e afluentes.',
+    title:'Nome do Lago', subtitle:'lago em [região/país]',
+    infobox:[
+      {t:'imggrid', items:[{src:null,caption:'Foto do lago'}]},
+      {t:'row', label:'Localização', value:'Região, País'},
+      {t:'row', label:'Área', value:'Ex: 100 km²'},
+      {t:'row', label:'Profundidade máxima', value:'Ex: 50 m'},
+      {t:'row', label:'Volume', value:'Ex: 10 km³'},
+      {t:'row', label:'Afluentes', value:'Principais rios afluentes'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o lago.'},{heading:'Formação', text:'Origem geológica do lago.'},{heading:'Ecossistema', text:'Fauna e flora associadas.'}]
   }
+
 };}
 
 /* ============================================================
@@ -421,7 +1133,18 @@ var QUICK_FIELDS = [
   { cat:'Eleição', items:['Registrado','Participação','Candidato','Partido','Votos','Percentual'] },
   { cat:'Crime / Incidente', items:['Tipo de ataque','Alvo(s)','Mortes','Feridos','Responsável(is)','Força(s) de defesa'] },
   { cat:'Esporte', items:['Evento','Árbitro','Público','Estádio','Competição'] },
-  { cat:'Elementos compostos', items:['Arma(s) — lista','Beligerantes — seção + 2 colunas','Comandantes — seção + 2 colunas','Forças — seção + 2 colunas','Baixas — seção + 2 colunas'] }
+  { cat:'Elementos compostos', items:['Arma(s) — lista','Beligerantes — seção + 2 colunas','Comandantes — seção + 2 colunas','Forças — seção + 2 colunas','Baixas — seção + 2 colunas'] },
+  { cat:'Música', items:['Integrantes — lista','Gênero musical','Anos ativos','Gravadora','Faixas — lista'] },
+  { cat:'Tecnologia', items:['Desenvolvedor(a)','Versão estável','Sistema operacional','Licença','Plataforma'] },
+  { cat:'Geografia física', items:['Nascente','Foz','Altitude','Comprimento','Área da bacia','Proeminência'] },
+  { cat:'Saúde', items:['Especialidade','Sintomas','Causas','Tratamento','Método de diagnóstico'] },
+  { cat:'Cultura', items:['Elenco — lista','Emissora original','Temporadas','Episódios','Gênero'] },
+  { cat:'Política', items:['Vice-presidente','Mandato','Partido','Ideologia','Espectro político','Coligação','Votos','Percentual'] },
+  { cat:'História', items:['Período','Precedido por','Sucedeu a','Causa','Consequência','Tratado','Participantes'] },
+  { cat:'Economia', items:['PIB','PIB per capita','Moeda','Inflação','Exportações','Importações','Dívida pública'] },
+  { cat:'Arquitetura', items:['Arquiteto','Estilo','Construção','Inauguração','Altura','Material','Patrimônio'] },
+  { cat:'Educação', items:['Reitor(a)','Fundação','Campus','Estudantes','Cursos','Ranking','Mantenedora'] },
+  { cat:'Internet', items:['Criador(a)','Lançamento','Usuários','Categoria','URL','Desenvolvedor(a)'] }
 ];
 function quickFieldOptionsHtml(){
   return QUICK_FIELDS.map(function(group){
@@ -430,8 +1153,9 @@ function quickFieldOptionsHtml(){
   }).join('');
 }
 function addQuickField(label){
-  if(label === 'Arma(s) — lista'){
-    state.infobox.push({t:'list', label:'Arma(s)', items:['Item 1']});
+  if(label.indexOf(' — lista') >= 0){
+    var listLabel = label.split(' — ')[0];
+    state.infobox.push({t:'list', label:listLabel, items:['Item 1']});
   } else if(label.indexOf(' — seção + 2 colunas') >= 0){
     var base = label.split(' — ')[0];
     state.infobox.push({t:'section', text:base});
@@ -449,12 +1173,61 @@ function addQuickField(label){
 var state = null;
 var mode = 'read';
 var pendingImg = null; // {idx, ci}
+var pendingBodyImg = null;
 var saveTimer = null;
 
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 function esc(s){
   s = (s===undefined || s===null) ? '' : String(s);
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function escRich(s){
+  s = (s===undefined || s===null) ? '' : String(s);
+  if(!s) return '';
+  if(!/[<&]/.test(s)) return esc(s).replace(/\n/g,'<br>');
+  return sanitizeRichHTML(s);
+}
+function sanitizeRichHTML(html){
+  var tmp = document.createElement('div');
+  tmp.innerHTML = String(html);
+  var allowed = {B:1,STRONG:1,I:1,EM:1,U:1,S:1,STRIKE:1,A:1,BR:1,P:1,DIV:1,SPAN:1,BLOCKQUOTE:1,PRE:1,UL:1,OL:1,LI:1,CODE:1,SUP:1,SUB:1,SMALL:1};
+  function clean(node){
+    Array.from(node.childNodes).forEach(function(ch){
+      if(ch.nodeType === 1){
+        if(!allowed[ch.tagName]){
+          var parent = ch.parentNode;
+          while(ch.firstChild) parent.insertBefore(ch.firstChild,ch);
+          parent.removeChild(ch);
+          return;
+        }
+        Array.from(ch.attributes).forEach(function(a){
+          var n=a.name.toLowerCase();
+          if(n!=='href' && n!=='target' && n!=='rel') ch.removeAttribute(a.name);
+        });
+        if(ch.tagName==='A'){
+          var href=ch.getAttribute('href')||'';
+          if(!/^https?:\/\//i.test(href) && !/^#/.test(href)) ch.removeAttribute('href');
+          ch.setAttribute('target','_blank');
+          ch.setAttribute('rel','noopener noreferrer');
+        }
+        clean(ch);
+      }
+    });
+  }
+  clean(tmp);
+  return tmp.innerHTML;
+}
+function plainFromHTML(html){
+  var d=document.createElement('div');
+  d.innerHTML=html||'';
+  return d.innerText;
+}
+function setRichHTML(el, value){
+  el.innerHTML = escRich(value||'');
+}
+function execRichCommand(cmd, value){
+  document.execCommand(cmd,false,value||null);
 }
 
 /* ============================================================
@@ -495,11 +1268,25 @@ function storageDelete(key){
   }catch(e){ return Promise.resolve(null); }
 }
 
+var saveStatusTimer = null;
+function showToast(msg, ms){
+  var el = document.getElementById('saveStatus');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(saveStatusTimer);
+  saveStatusTimer = setTimeout(function(){ el.classList.remove('show'); }, ms||2500);
+}
+function showSaveStatus(){
+  var now = new Date();
+  var hh = String(now.getHours()).padStart(2,'0'), mm = String(now.getMinutes()).padStart(2,'0');
+  showToast('✓ Rascunho salvo às '+hh+':'+mm);
+}
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
     if(!state) return;
-    storageSet('draft', JSON.stringify(state));
+    storageSet('draft', JSON.stringify(state)).then(showSaveStatus);
   }, 500);
 }
 
@@ -524,29 +1311,37 @@ function setPageIndex(list){
 function renderInfobox(){
   var box = document.getElementById('infobox');
   var html = '';
+  var total = state.infobox.length;
   state.infobox.forEach(function(item, idx){
+    var handle = '<span class="drag-handle" draggable="true" data-drag-kind="infobox" data-drag-index="'+idx+'" title="Arrastar campo">☷</span>'+
+      '<span class="move-btns">'+
+        '<button class="move-btn" data-moveinfobox="'+idx+'" data-dir="-1" title="Mover para cima"'+(idx===0?' disabled':'')+'>▲</button>'+
+        '<button class="move-btn" data-moveinfobox="'+idx+'" data-dir="1" title="Mover para baixo"'+(idx===total-1?' disabled':'')+'>▼</button>'+
+      '</span>';
     if(item.t === 'title'){
-      html += '<div class="ib-title" contenteditable data-idx="'+idx+'" data-field="text">'+esc(item.text)+'</div>';
+      html += '<div class="ib-title-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<div class="ib-title" contenteditable data-idx="'+idx+'" data-field="text">'+escRich(item.text)+'</div></div>';
     } else if(item.t === 'section'){
-      html += '<div class="ib-section-wrap"><div class="ib-section" contenteditable data-idx="'+idx+'" data-field="text">'+esc(item.text)+'</div>'+
+      html += '<div class="ib-section-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<div class="ib-section" contenteditable data-idx="'+idx+'" data-field="text">'+escRich(item.text)+'</div>'+
               '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     } else if(item.t === 'row'){
-      html += '<div class="ib-row">'+
-              '<div class="ib-label" contenteditable data-idx="'+idx+'" data-field="label">'+esc(item.label)+'</div>'+
-              '<div class="ib-value" contenteditable data-idx="'+idx+'" data-field="value">'+esc(item.value)+'</div>'+
+      html += '<div class="ib-row" data-item-wrap="'+idx+'">'+handle+
+              '<div class="ib-label" contenteditable data-idx="'+idx+'" data-field="label">'+escRich(item.label)+'</div>'+
+              '<div class="ib-value" contenteditable data-idx="'+idx+'" data-field="value">'+escRich(item.value)+'</div>'+
               '<button class="row-del" data-del="'+idx+'" title="Remover">×</button>'+
               '</div>';
     } else if(item.t === 'twocol'){
-      html += '<div class="ib-twocol-wrap"><div class="ib-twocol">'+
-              '<div contenteditable data-idx="'+idx+'" data-field="left">'+esc(item.left)+'</div>'+
-              '<div contenteditable data-idx="'+idx+'" data-field="right">'+esc(item.right)+'</div>'+
+      html += '<div class="ib-twocol-wrap" data-item-wrap="'+idx+'">'+handle+'<div class="ib-twocol">'+
+              '<div contenteditable data-idx="'+idx+'" data-field="left">'+escRich(item.left)+'</div>'+
+              '<div contenteditable data-idx="'+idx+'" data-field="right">'+escRich(item.right)+'</div>'+
               '</div><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     } else if(item.t === 'list'){
       var lis = item.items.map(function(li, ci){
-        return '<li contenteditable data-idx="'+idx+'" data-field="listitem" data-li="'+ci+'">'+esc(li)+'</li>';
+        return '<li contenteditable data-idx="'+idx+'" data-field="listitem" data-li="'+ci+'">'+escRich(li)+'</li>';
       }).join('');
-      html += '<div class="ib-list-wrap"><div class="ib-list">'+
-              '<span class="ib-list-label" contenteditable data-idx="'+idx+'" data-field="listlabel">'+esc(item.label)+'</span>'+
+      html += '<div class="ib-list-wrap" data-item-wrap="'+idx+'">'+handle+'<div class="ib-list">'+
+              '<span class="ib-list-label" contenteditable data-idx="'+idx+'" data-field="listlabel">'+escRich(item.label)+'</span>'+
               '<ul>'+lis+'</ul>'+
               (mode==='edit' ? '<span class="ib-list-addbtn" data-addlistitem="'+idx+'">+ adicionar item</span>' : '')+
               '</div><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
@@ -557,24 +1352,34 @@ function renderInfobox(){
         var inner = im.src
           ? '<img src="'+im.src+'" data-imgidx="'+idx+'" data-imgci="'+ci+'">'
           : '<div class="ib-img-slot" data-imgidx="'+idx+'" data-imgci="'+ci+'">'+(mode==='edit' ? '🖼️ clique para adicionar imagem' : '')+'</div>';
-        return '<div class="ib-img-cell">'+inner+'<div class="ib-caption" contenteditable data-idx="'+idx+'" data-field="caption" data-ci="'+ci+'">'+esc(im.caption)+'</div></div>';
+        return '<div class="ib-img-cell">'+inner+'<div class="ib-caption" contenteditable data-idx="'+idx+'" data-field="caption" data-ci="'+ci+'">'+escRich(im.caption)+'</div></div>';
       }).join('');
-      html += '<div class="ib-imggrid-wrap"><div class="ib-imggrid '+cls+'">'+cells+'</div>'+
+      html += '<div class="ib-imggrid-wrap" data-item-wrap="'+idx+'">'+handle+'<div class="ib-imggrid '+cls+'">'+cells+'</div>'+
               (mode==='edit' ? '<span class="ib-list-addbtn" style="margin-left:6px;" data-addimg="'+idx+'">+ adicionar foto</span>' : '')+
               '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     } else if(item.t === 'image'){
       var inner2 = item.src
         ? '<img src="'+item.src+'" data-imgidx="'+idx+'" style="width:100%;display:block;">'
         : '<div class="ib-img-slot" data-imgidx="'+idx+'" style="aspect-ratio:1/1;">'+(mode==='edit' ? '🖼️ clique para adicionar imagem' : '')+'</div>';
-      html += '<div class="ib-imggrid-wrap" style="padding:6px;">'+inner2+
-              '<div class="ib-caption" style="text-align:center;font-size:11.5px;color:#54595d;" contenteditable data-idx="'+idx+'" data-field="caption">'+esc(item.caption)+'</div>'+
+      html += '<div class="ib-imggrid-wrap" data-item-wrap="'+idx+'" style="padding:6px;">'+handle+inner2+
+              '<div class="ib-caption" style="text-align:center;font-size:11.5px;color:#54595d;" contenteditable data-idx="'+idx+'" data-field="caption">'+escRich(item.caption)+'</div>'+
               '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     } else if(item.t === 'scoreline'){
-      html += '<div class="ib-scoreline-wrap"><div class="ib-scoreline">'+
-              '<div class="team" contenteditable data-idx="'+idx+'" data-field="teamA">'+esc(item.teamA)+'</div>'+
-              '<div class="score"><span contenteditable data-idx="'+idx+'" data-field="scoreA">'+esc(item.scoreA)+'</span>–<span contenteditable data-idx="'+idx+'" data-field="scoreB">'+esc(item.scoreB)+'</span></div>'+
-              '<div class="team" contenteditable data-idx="'+idx+'" data-field="teamB">'+esc(item.teamB)+'</div>'+
+      html += '<div class="ib-scoreline-wrap" data-item-wrap="'+idx+'">'+handle+'<div class="ib-scoreline">'+
+              '<div class="team" contenteditable data-idx="'+idx+'" data-field="teamA">'+escRich(item.teamA)+'</div>'+
+              '<div class="score"><span contenteditable data-idx="'+idx+'" data-field="scoreA">'+escRich(item.scoreA)+'</span>–<span contenteditable data-idx="'+idx+'" data-field="scoreB">'+escRich(item.scoreB)+'</span></div>'+
+              '<div class="team" contenteditable data-idx="'+idx+'" data-field="teamB">'+escRich(item.teamB)+'</div>'+
               '</div><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'quote'){
+      html += '<div class="ib-quote-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<div class="ib-quote" contenteditable data-idx="'+idx+'" data-field="text">'+escRich(item.text)+'</div>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'notice'){
+      html += '<div class="ib-notice-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<div class="ib-notice" contenteditable data-idx="'+idx+'" data-field="text">'+escRich(item.text)+'</div>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'divider'){
+      html += '<div class="ib-divider-wrap" data-item-wrap="'+idx+'">'+handle+'<hr style="border:0;border-top:1px solid #a2a9b1;margin:6px 0"><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     }
   });
 
@@ -589,18 +1394,22 @@ function renderInfobox(){
         '<span class="ib-addbar-label">Elemento genérico:</span>'+
         '<select id="addRowType">'+
           '<option value="row">Campo (rótulo + valor)</option>'+
-          '<option value="section">Seção (título colorido)</option>'+
+          '<option value="section">Seção (título)</option>'+
           '<option value="twocol">Duas colunas</option>'+
           '<option value="list">Lista</option>'+
-          '<option value="imggrid">Imagem(ns)</option>'+
+          '<option value="imggrid">Galeria de imagens</option>'+
+          '<option value="image">Imagem única</option>'+
           '<option value="scoreline">Placar (times)</option>'+
+          '<option value="quote">Citação em destaque</option>'+
+          '<option value="notice">Aviso / nota</option>'+
+          '<option value="divider">Linha separadora</option>'+
         '</select>'+
         '<button id="addRowBtn">+ Adicionar</button>'+
       '</div>'+
-      '</div>';
+    '</div>';
   }
   box.innerHTML = html;
-  box.contentEditable = false; // children control their own editability
+  box.contentEditable = false;
   setContentEditableState(box);
 }
 
@@ -613,25 +1422,156 @@ function setContentEditableState(container){
    RENDER: BODY / TITLE
 ============================================================ */
 function renderBody(){
-  var wrap = document.getElementById('articleBody');
+  var container = document.getElementById('articleBody');
+  var wrap = document.getElementById('articleSections');
   var html = '';
   state.body.forEach(function(sec, i){
-    html += '<div class="section-block">';
+    html += '<div class="section-block" data-section="'+i+'">';
     var hasHeading = (sec.heading !== null && sec.heading !== undefined);
     var isCollapsed = hasHeading && !!sec.collapsed;
     if(hasHeading){
       html += '<div class="section-header">'+
+        '<span class="drag-handle" draggable="true" data-drag-kind="section" data-drag-index="'+i+'" title="Arrastar seção">☷</span>'+
         '<span class="collapse-arrow'+(isCollapsed?' collapsed':'')+'" data-carrow="'+i+'">▼</span>'+
-        '<h2 contenteditable data-bidx="'+i+'" data-bfield="heading">'+esc(sec.heading)+'</h2>'+
+        '<h2 contenteditable data-bidx="'+i+'" data-bfield="heading">'+escRich(sec.heading)+'</h2>'+
         '</div>';
     }
-    html += '<div class="wiki-para'+(isCollapsed?' collapsed':'')+'" contenteditable data-bidx="'+i+'" data-bfield="text">'+esc(sec.text)+'</div>';
+    html += '<div class="section-content'+(isCollapsed?' collapsed':'')+'" data-section-content="'+i+'">';
+    var blocks = getSectionBlocks(sec);
+    blocks.forEach(function(block, bi){ html += renderBodyBlock(block,i,bi,blocks.length); });
+    if(mode==='edit'){
+      html += '<div class="section-tools">'+
+        '<span class="drag-handle" draggable="true" data-drag-kind="section" data-drag-index="'+i+'" title="Arrastar seção">☷</span>'+
+        '<span class="move-btns">'+
+          '<button class="move-btn" data-movesection="'+i+'" data-dir="-1" title="Mover seção para cima"'+(i===0?' disabled':'')+'>▲</button>'+
+          '<button class="move-btn" data-movesection="'+i+'" data-dir="1" title="Mover seção para baixo"'+(i===state.body.length-1?' disabled':'')+'>▼</button>'+
+        '</span>'+
+        '<button class="mini-builder-btn" data-addblock="text" data-section="'+i+'" title="Adicionar um parágrafo de texto">＋ Texto</button>'+
+        '<button class="mini-builder-btn" data-addblock="image" data-section="'+i+'" title="Adicionar uma imagem">🖼️ Imagem</button>'+
+        '<button class="mini-builder-btn" data-addblock="gallery" data-section="'+i+'" title="Adicionar uma galeria com várias imagens">▦ Galeria</button>'+
+        '<button class="mini-builder-btn" data-addblock="infobox" data-section="'+i+'" title="Adicionar uma mini-ficha dentro da seção">▤ Infobox</button>'+
+        '<button class="mini-builder-btn" data-addblock="table" data-section="'+i+'" title="Adicionar uma tabela">▦ Tabela</button>'+
+        '<button class="mini-builder-btn" data-addblock="quote" data-section="'+i+'" title="Adicionar uma citação em destaque">❝ Citação</button>'+
+        '<button class="mini-builder-btn" data-addblock="notice" data-section="'+i+'" title="Adicionar uma caixa de aviso">ℹ Aviso</button>'+
+        '<button class="mini-builder-btn" data-addblock="code" data-section="'+i+'" title="Adicionar um bloco de código">{" + "} Código</button>'+
+      '</div>';
+    }
+    html += '</div>';
     if(i > 0){ html += '<button class="section-del" data-secdel="'+i+'">Remover seção</button>'; }
     html += '</div>';
   });
   wrap.innerHTML = html;
-  setContentEditableState(wrap);
+  setContentEditableState(container);
+  bindBlockImageClicks();
+  renderToc();
 }
+function getSectionBlocks(sec){
+  if(Array.isArray(sec.blocks) && sec.blocks.length) return sec.blocks;
+  return [{type:'text',html:sec.html!==undefined?sec.html:(sec.text||'')}];
+}
+function ensureSectionBlocks(i){
+  var sec=state.body[i];
+  if(!Array.isArray(sec.blocks)){
+    sec.blocks=getSectionBlocks(sec).map(function(b){return deepClone(b);});
+  }
+  return sec.blocks;
+}
+function renderBodyBlock(block, si, bi, total){
+  var h='<div class="body-block" data-section="'+si+'" data-block="'+bi+'">';
+  if(mode==='edit') h+='<span class="drag-handle" draggable="true" data-drag-kind="block" data-section="'+si+'" data-block-index="'+bi+'" title="Arrastar bloco">☷</span>'+
+    '<span class="move-btns" style="position:absolute;top:3px;right:24px;">'+
+      '<button class="move-btn" data-moveblock="'+bi+'" data-section="'+si+'" data-dir="-1" title="Mover para cima"'+(bi===0?' disabled':'')+'>▲</button>'+
+      '<button class="move-btn" data-moveblock="'+bi+'" data-section="'+si+'" data-dir="1" title="Mover para baixo"'+(bi===total-1?' disabled':'')+'>▼</button>'+
+    '</span>'+
+    '<button class="block-del" data-delblock="'+bi+'" data-section="'+si+'" title="Remover este bloco">×</button>';
+  if(block.type==='text'){
+    h+='<div class="rich-text" contenteditable data-block-field="html" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.html||block.text||'')+'</div>';
+  } else if(block.type==='image'){
+    h+='<figure class="body-image '+(block.align||'')+'"><div class="body-image-inner">';
+    h+=block.src?'<img src="'+block.src+'" data-bodyimg="'+si+'" data-blockimg="'+bi+'">':'<div class="ib-img-slot" data-bodyimg="'+si+'" data-blockimg="'+bi+'">🖼️ clique para adicionar imagem</div>';
+    h+='</div><figcaption contenteditable data-block-field="caption" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.caption||'Legenda da imagem')+'</figcaption></figure>';
+  } else if(block.type==='gallery'){
+    var items=Array.isArray(block.items)?block.items:[{src:null,caption:'Imagem 1'},{src:null,caption:'Imagem 2'}];
+    h+='<div class="ib-imggrid '+(items.length===2?'n2':'n3')+'">'+items.map(function(im,ci){
+      return '<div class="ib-img-cell">'+(im.src?'<img src="'+im.src+'" data-galleryimg="'+si+'" data-blockimg="'+bi+'" data-ci="'+ci+'">':'<div class="ib-img-slot" data-galleryimg="'+si+'" data-blockimg="'+bi+'" data-ci="'+ci+'">🖼️ adicionar</div>')+
+        '<div class="ib-caption" contenteditable data-block-field="galleryCaption" data-section="'+si+'" data-block="'+bi+'" data-ci="'+ci+'">'+escRich(im.caption||'Legenda')+'</div></div>';
+    }).join('')+'</div>';
+    if(mode==='edit') h+='<div class="section-tools"><button class="mini-builder-btn" data-addgalleryitem="'+si+'" data-block="'+bi+'">＋ adicionar imagem</button></div>';
+  } else if(block.type==='quote'){
+    h+='<blockquote class="body-quote" contenteditable data-block-field="html" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.html||'Citação')+'</blockquote>';
+  } else if(block.type==='code'){
+    h+='<pre class="body-code" contenteditable data-block-field="html" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.html||'Código')+'</pre>';
+  } else if(block.type==='notice'){
+    h+='<div class="body-notice '+(block.variant||'')+'" contenteditable data-block-field="html" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.html||'Aviso')+'</div>';
+  } else if(block.type==='infobox'){
+    h+='<div class="body-infobox"><div class="bi-title" contenteditable data-block-field="title" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.title||'Infobox')+'</div>'+
+      (block.rows||[]).map(function(r,ri){
+        return '<div class="bi-row"><div contenteditable data-block-field="rowLabel" data-section="'+si+'" data-block="'+bi+'" data-row="'+ri+'">'+escRich(r.label||'Campo')+'</div><div contenteditable data-block-field="rowValue" data-section="'+si+'" data-block="'+bi+'" data-row="'+ri+'">'+escRich(r.value||'Valor')+'</div></div>';
+      }).join('')+'</div>';
+  } else if(block.type==='table'){
+    var rows=block.rows||[['Cabeçalho 1','Cabeçalho 2'],['Valor','Valor']];
+    h+='<div class="body-table-wrap"><table class="body-table"><thead><tr>'+rows[0].map(function(c,ci){return '<th contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="0" data-ci="'+ci+'">'+escRich(c)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.slice(1).map(function(r,ri){
+      return '<tr>'+r.map(function(c,ci){return '<td contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="'+(ri+1)+'" data-ci="'+ci+'">'+escRich(c)+'</td>';}).join('')+'</tr>';
+    }).join('')+'</tbody></table></div>'+
+    (mode==='edit'?'<div class="section-tools"><button class="mini-builder-btn" data-addtablerow="'+si+'" data-block="'+bi+'">＋ linha</button><button class="mini-builder-btn" data-addtablecol="'+si+'" data-block="'+bi+'">＋ coluna</button></div>':'');
+  } else {
+    h+='<div class="rich-text" contenteditable data-block-field="html" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.html||'')+'</div>';
+  }
+  return h+'</div>';
+}
+function bindBlockImageClicks(){}
+function renderToc(){
+  var tocEl = document.getElementById('articleToc');
+  var headings = state.body.filter(function(s){ return s.heading !== null && s.heading !== undefined && s.heading.trim() !== ''; });
+  if(mode !== 'read' || headings.length < 3){
+    tocEl.innerHTML = '';
+    return;
+  }
+  var items = headings.map(function(s, i){
+    return '<li>'+(i+1)+' <a href="#">'+esc(s.heading)+'</a></li>';
+  }).join('');
+  tocEl.innerHTML = '<div class="wiki-toc"><div class="wiki-toc-title">Índice</div><ol>'+items+'</ol></div>';
+}
+
+/* ============================================================
+   RENDER: MAINTENANCE BANNER (wikipedia-style warning box)
+============================================================ */
+var BANNERS = {
+  none: null,
+  fontes: {icon:'⚠️', text:'Este artigo ou seção precisa de mais fontes confiáveis (parte do jogo de brincadeira).'},
+  atualizar: {icon:'🕒', text:'Este artigo pode estar desatualizado. Ajude a atualizá-lo para refletir eventos recentes ou informações recém-descobertas.'},
+  neutralidade: {icon:'⚖️', text:'A neutralidade deste artigo é contestada. Discuta isso na página de discussão (fictícia).'},
+  evento: {icon:'📰', text:'Este artigo é sobre um evento em curso. As informações podem mudar rapidamente à medida que o evento se desenrola.'},
+  traduzir: {icon:'🌐', text:'Este artigo (fictício) precisa ser traduzido, pois foi escrito originalmente em outro idioma.'},
+  promocional: {icon:'📢', text:'Este artigo (fictício) pode ter sido escrito como propaganda. Ajude a reescrevê-lo com um tom mais neutro.'},
+  ficcao: {icon:'🎭', text:'Este artigo descreve uma página de paródia/ficção criada no Wikipédia Editor, não é um conteúdo real.'}
+};
+var BANNER_LABELS = {none:'Sem aviso', fontes:'⚠️ Carece de fontes', atualizar:'🕒 Desatualizado', neutralidade:'⚖️ Neutralidade contestada', evento:'📰 Evento em curso', traduzir:'🌐 Precisa de tradução', promocional:'📢 Tom promocional', ficcao:'🎭 Aviso de paródia'};
+function populateBannerSelect(){
+  var sel = document.getElementById('bannerSelect');
+  sel.innerHTML = Object.keys(BANNER_LABELS).map(function(k){
+    return '<option value="'+k+'">'+esc(BANNER_LABELS[k])+'</option>';
+  }).join('');
+}
+function renderBanner(){
+  var el = document.getElementById('articleBanner');
+  var key = state.banner || 'none';
+  var b = BANNERS[key];
+  document.getElementById('bannerSelect').value = key;
+  document.getElementById('bannerSelect').classList.toggle('hidden', mode !== 'edit');
+  if(!b){ el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="wiki-maint-banner"><span class="wmb-icon">'+b.icon+'</span><span>'+esc(b.text)+'</span></div>';
+}
+populateBannerSelect();
+// bug corrigido: o <select> de aviso nunca tinha opções (populateBannerSelect
+// não era chamado) nem reagia a mudanças (faltava este listener) — escolher
+// um aviso não fazia absolutamente nada.
+document.getElementById('bannerSelect').addEventListener('change', function(e){
+  if(!state) return;
+  state.banner = e.target.value;
+  renderBanner();
+  scheduleSave();
+});
 
 function renderHeader(){
   var titleEl = document.getElementById('pageTitle');
@@ -644,13 +1584,36 @@ function renderHeader(){
 
 function renderAll(){
   document.body.classList.toggle('editing', mode === 'edit');
+  updateFormatToolbarVisibility();
   document.getElementById('btnRead').classList.toggle('active', mode==='read');
   document.getElementById('btnEdit').classList.toggle('active', mode==='edit');
   document.getElementById('addSectionWrap').classList.toggle('hidden', mode!=='edit');
   renderHeader();
   renderInfobox();
   renderBody();
+  renderBanner();
 }
+
+/* ============================================================
+   TÍTULO E SUBTÍTULO DA PÁGINA
+   (bug corrigido: antes não existia listener nenhum aqui, então o
+   texto digitado nunca ia para o "state" — ao trocar para o modo
+   Leitor, renderHeader() sobrescrevia o campo com o valor antigo,
+   "resetando" o título/descrição.)
+============================================================ */
+document.getElementById('pageTitle').addEventListener('input', function(e){
+  if(!state) return;
+  state.title = e.target.textContent;
+  scheduleSave();
+});
+document.getElementById('pageDesc').addEventListener('input', function(e){
+  if(!state) return;
+  state.subtitle = e.target.textContent;
+  scheduleSave();
+});
+// título e descrição são campos de uma linha só: impede Enter de quebrar o layout
+document.getElementById('pageTitle').addEventListener('keydown', function(e){ if(e.key==='Enter') e.preventDefault(); });
+document.getElementById('pageDesc').addEventListener('keydown', function(e){ if(e.key==='Enter') e.preventDefault(); });
 
 /* ============================================================
    EVENT DELEGATION: EDITS
@@ -662,7 +1625,7 @@ document.getElementById('infobox').addEventListener('input', function(e){
   var field = el.dataset.field;
   var item = state.infobox[idx];
   if(!item) return;
-  var val = el.innerText;
+  var val = el.innerHTML;
   if(field === 'listitem'){
     item.items[parseInt(el.dataset.li,10)] = val;
   } else if(field === 'caption'){
@@ -688,6 +1651,10 @@ document.getElementById('infobox').addEventListener('click', function(e){
     addQuickField(qlabel);
     return;
   }
+  if(t.dataset && t.dataset.moveinfobox !== undefined){
+    moveInfoboxItem(parseInt(t.dataset.moveinfobox,10), parseInt(t.dataset.dir,10));
+    return;
+  }
   if(t.dataset && t.dataset.del !== undefined){
     state.infobox.splice(parseInt(t.dataset.del,10), 1);
     renderInfobox(); scheduleSave();
@@ -711,6 +1678,14 @@ document.getElementById('infobox').addEventListener('click', function(e){
   }
 });
 
+function moveInfoboxItem(idx, dir){
+  var to = idx + dir;
+  if(to < 0 || to >= state.infobox.length) return;
+  var item = state.infobox.splice(idx,1)[0];
+  state.infobox.splice(to,0,item);
+  renderInfobox();
+  scheduleSave();
+}
 function addInfoboxRow(type){
   var defaults = {
     row: {t:'row', label:'Novo campo', value:'Valor'},
@@ -718,7 +1693,10 @@ function addInfoboxRow(type){
     twocol: {t:'twocol', left:'Coluna A', right:'Coluna B'},
     list: {t:'list', label:'Lista', items:['Item 1']},
     imggrid: {t:'imggrid', items:[{src:null, caption:'legenda'}]},
-    scoreline: {t:'scoreline', teamA:'Time A', teamB:'Time B', scoreA:'0', scoreB:'0'}
+    scoreline: {t:'scoreline', teamA:'Time A', teamB:'Time B', scoreA:'0', scoreB:'0'},
+    quote: {t:'quote', text:'Uma citação marcante.'},
+    notice: {t:'notice', text:'Nota ou aviso curto.'},
+    divider: {t:'divider'}
   };
   state.infobox.push(deepClone(defaults[type] || defaults.row));
   renderInfobox();
@@ -731,11 +1709,20 @@ document.getElementById('fileInput').addEventListener('change', function(e){
   var reader = new FileReader();
   reader.onload = function(ev){
     var dataUrl = ev.target.result;
-    var item = state.infobox[pendingImg.idx];
-    if(pendingImg.ci !== null){ item.items[pendingImg.ci].src = dataUrl; }
-    else { item.src = dataUrl; }
-    pendingImg = null;
-    renderInfobox();
+    if(pendingImg){
+      var item = state.infobox[pendingImg.idx];
+      if(pendingImg.ci !== null && item.items){ item.items[pendingImg.ci].src = dataUrl; }
+      else { item.src = dataUrl; }
+      pendingImg = null;
+      renderInfobox();
+    } else if(pendingBodyImg){
+      var bs=pendingBodyImg.section, bb=pendingBodyImg.block;
+      var block=ensureSectionBlocks(bs)[bb];
+      if(pendingBodyImg.ci !== null && block.items){ block.items[pendingBodyImg.ci].src=dataUrl; }
+      else { block.src=dataUrl; }
+      pendingBodyImg=null;
+      renderBody();
+    }
     scheduleSave();
   };
   reader.readAsDataURL(file);
@@ -743,34 +1730,150 @@ document.getElementById('fileInput').addEventListener('change', function(e){
 });
 
 document.getElementById('articleBody').addEventListener('input', function(e){
-  var el = e.target;
-  if(el.dataset.bidx === undefined) return;
-  var i = parseInt(el.dataset.bidx,10);
-  state.body[i][el.dataset.bfield] = el.innerText;
-  scheduleSave();
+  var el=e.target;
+  if(el.dataset.bidx!==undefined){
+    var i=parseInt(el.dataset.bidx,10);
+    state.body[i][el.dataset.bfield]=el.innerHTML;
+    if(el.dataset.bfield==='heading') state.body[i].heading=el.innerHTML;
+    scheduleSave(); return;
+  }
+  if(el.dataset.blockField!==undefined){
+    var si=parseInt(el.dataset.section,10), bi=parseInt(el.dataset.block,10), blocks=ensureSectionBlocks(si), field=el.dataset.blockField;
+    var b=blocks[bi]; if(!b) return;
+    if(field==='galleryCaption'){ b.items[parseInt(el.dataset.ci,10)].caption=el.innerHTML; }
+    else if(field==='rowLabel'){ b.rows[parseInt(el.dataset.row,10)].label=el.innerHTML; }
+    else if(field==='rowValue'){ b.rows[parseInt(el.dataset.row,10)].value=el.innerHTML; }
+    else if(field==='title'){ b.title=el.innerHTML; }
+    else b[field]=el.innerHTML;
+    state.body[si].html=blocks[0] && blocks[0].type==='text' ? blocks[0].html : state.body[si].html;
+    scheduleSave(); return;
+  }
+  if(el.dataset.tableSection!==undefined){
+    var s=parseInt(el.dataset.tableSection,10), bidx=parseInt(el.dataset.tableBlock,10), tb=ensureSectionBlocks(s)[bidx];
+    if(tb && tb.rows) tb.rows[parseInt(el.dataset.ri,10)][parseInt(el.dataset.ci,10)]=el.innerHTML;
+    scheduleSave();
+  }
 });
 document.getElementById('articleBody').addEventListener('click', function(e){
-  if(e.target.dataset && e.target.dataset.secdel !== undefined){
-    state.body.splice(parseInt(e.target.dataset.secdel,10), 1);
-    renderBody(); scheduleSave();
-    return;
+  if(e.target.dataset && e.target.dataset.movesection!==undefined){
+    moveSection(parseInt(e.target.dataset.movesection,10), parseInt(e.target.dataset.dir,10)); return;
   }
-  if(e.target.dataset && e.target.dataset.carrow !== undefined){
-    var i = parseInt(e.target.dataset.carrow,10);
-    state.body[i].collapsed = !state.body[i].collapsed;
-    renderBody(); scheduleSave();
+  if(e.target.dataset && e.target.dataset.moveblock!==undefined){
+    moveBlock(parseInt(e.target.dataset.section,10), parseInt(e.target.dataset.moveblock,10), parseInt(e.target.dataset.dir,10)); return;
+  }
+  if(e.target.dataset && e.target.dataset.secdel!==undefined){
+    state.body.splice(parseInt(e.target.dataset.secdel,10),1); renderBody(); scheduleSave(); return;
+  }
+  if(e.target.dataset && e.target.dataset.carrow!==undefined){
+    var i=parseInt(e.target.dataset.carrow,10); state.body[i].collapsed=!state.body[i].collapsed; renderBody(); scheduleSave(); return;
+  }
+  if(e.target.dataset && e.target.dataset.addblock){
+    addBodyBlock(parseInt(e.target.dataset.section,10), e.target.dataset.addblock); return;
+  }
+  if(e.target.dataset && e.target.dataset.delblock!==undefined){
+    var si=parseInt(e.target.dataset.section,10), bi=parseInt(e.target.dataset.delblock,10);
+    var bl=ensureSectionBlocks(si); bl.splice(bi,1); if(!bl.length) bl.push({type:'text',html:'Escreva aqui...'});
+    renderBody(); scheduleSave(); return;
+  }
+  if(e.target.dataset && e.target.dataset.addgalleryitem!==undefined){
+    var gs=parseInt(e.target.dataset.addgalleryitem,10), gb=parseInt(e.target.dataset.block,10);
+    ensureSectionBlocks(gs)[gb].items.push({src:null,caption:'Legenda'}); renderBody(); scheduleSave(); return;
+  }
+  if(e.target.dataset && e.target.dataset.addtablerow!==undefined){
+    var ts=parseInt(e.target.dataset.addtablerow,10), tb=parseInt(e.target.dataset.block,10);
+    var table=ensureSectionBlocks(ts)[tb]; var cols=(table.rows[0]||[]).length; table.rows.push(Array(cols).fill('Valor')); renderBody(); scheduleSave(); return;
+  }
+  if(e.target.dataset && e.target.dataset.addtablecol!==undefined){
+    var tcs=parseInt(e.target.dataset.addtablecol,10), tcb=parseInt(e.target.dataset.block,10);
+    var tab=ensureSectionBlocks(tcs)[tcb]; tab.rows.forEach(function(r,ri){ r.push(ri===0?'Novo cabeçalho':'Valor'); }); renderBody(); scheduleSave(); return;
+  }
+  if(mode==='edit' && e.target.dataset && (e.target.dataset.bodyimg!==undefined || e.target.dataset.galleryimg!==undefined)){
+    pendingBodyImg={
+      section:parseInt(e.target.dataset.bodyimg!==undefined?e.target.dataset.bodyimg:e.target.dataset.galleryimg,10),
+      block:parseInt(e.target.dataset.blockimg,10),
+      ci:e.target.dataset.ci!==undefined?parseInt(e.target.dataset.ci,10):null
+    };
+    document.getElementById('fileInput').click();
   }
 });
 document.getElementById('btnAddSection').addEventListener('click', function(){
-  state.body.push({heading:'Nova seção', text:'Escreva aqui...'});
+  state.body.push({heading:'Nova seção',blocks:[{type:'text',html:'Escreva aqui...'}],text:'Escreva aqui...'});
   renderBody(); scheduleSave();
 });
+function moveSection(i, dir){
+  var to = i + dir;
+  if(to < 0 || to >= state.body.length) return;
+  var item = state.body.splice(i,1)[0];
+  state.body.splice(to,0,item);
+  renderBody();
+  scheduleSave();
+}
+function moveBlock(si, bi, dir){
+  var blocks = ensureSectionBlocks(si);
+  var to = bi + dir;
+  if(to < 0 || to >= blocks.length) return;
+  var item = blocks.splice(bi,1)[0];
+  blocks.splice(to,0,item);
+  renderBody();
+  scheduleSave();
+}
+function addBodyBlock(sectionIndex, type){
+  var blocks=ensureSectionBlocks(sectionIndex);
+  var d={
+    text:{type:'text',html:'Escreva aqui...'},
+    image:{type:'image',src:null,caption:'Legenda da imagem',align:'center'},
+    gallery:{type:'gallery',items:[{src:null,caption:'Imagem 1'},{src:null,caption:'Imagem 2'}]},
+    infobox:{type:'infobox',title:'Infobox da seção',rows:[{label:'Campo',value:'Valor'},{label:'Outro campo',value:'Valor'}]},
+    table:{type:'table',rows:[['Cabeçalho 1','Cabeçalho 2'],['Valor','Valor']]},
+    quote:{type:'quote',html:'Escreva uma citação ou destaque.'},
+    notice:{type:'notice',variant:'',html:'Escreva um aviso ou nota.'},
+    code:{type:'code',html:'Digite o código aqui.'}
+  };
+  blocks.push(deepClone(d[type]||d.text)); renderBody(); scheduleSave();
+}
 
-document.getElementById('pageTitle').addEventListener('input', function(e){
-  state.title = e.target.textContent; scheduleSave();
+/* ============================================================
+   DRAG AND DROP
+   O arraste começa SOMENTE na alça ☷, preservando a seleção de texto.
+============================================================ */
+var dragState=null;
+function clearDragVisuals(){document.querySelectorAll('.dragging,.drop-target,.drop-before,.drop-after').forEach(function(el){el.classList.remove('dragging','drop-target','drop-before','drop-after');});}
+function dropPos(el,e){var r=el.getBoundingClientRect();return e.clientY<r.top+r.height/2?'before':'after';}
+document.getElementById('infobox').addEventListener('dragstart',function(e){
+  var h=e.target.closest('[data-drag-kind="infobox"]');if(!h||mode!=='edit')return;
+  dragState={kind:'infobox',index:+h.dataset.dragIndex};e.dataTransfer.effectAllowed='move';
+  var owner=h.closest('[data-item-wrap]');if(owner)owner.classList.add('dragging');
 });
-document.getElementById('pageDesc').addEventListener('input', function(e){
-  state.subtitle = e.target.textContent; scheduleSave();
+document.getElementById('infobox').addEventListener('dragend',function(){clearDragVisuals();dragState=null;});
+document.getElementById('infobox').addEventListener('dragover',function(e){
+  if(!dragState||dragState.kind!=='infobox')return;var w=e.target.closest('[data-item-wrap]');if(!w)return;e.preventDefault();clearDragVisuals();w.classList.add(dropPos(w,e)==='before'?'drop-before':'drop-after');
+});
+document.getElementById('infobox').addEventListener('drop',function(e){
+  if(!dragState||dragState.kind!=='infobox')return;e.preventDefault();var w=e.target.closest('[data-item-wrap]');if(!w){clearDragVisuals();dragState=null;return;}
+  var from=dragState.index,to=+w.dataset.itemWrap,pos=dropPos(w,e);clearDragVisuals();
+  if(from===to){dragState=null;return;}var moved=state.infobox.splice(from,1)[0];if(from<to)to--;if(pos==='after')to++;to=Math.max(0,Math.min(to,state.infobox.length));state.infobox.splice(to,0,moved);renderInfobox();scheduleSave();dragState=null;
+});
+document.getElementById('articleSections').addEventListener('dragstart',function(e){
+  var h=e.target.closest('.drag-handle[data-drag-kind]');if(!h||mode!=='edit')return;
+  if(h.dataset.dragKind==='section')dragState={kind:'section',index:+h.dataset.dragIndex};
+  else if(h.dataset.dragKind==='block')dragState={kind:'block',section:+h.dataset.section,index:+h.dataset.blockIndex};
+  if(dragState){e.dataTransfer.effectAllowed='move';var owner=h.closest('.section-block,.body-block');if(owner)owner.classList.add('dragging');}
+});
+document.getElementById('articleSections').addEventListener('dragend',function(){clearDragVisuals();dragState=null;});
+document.getElementById('articleSections').addEventListener('dragover',function(e){
+  if(!dragState)return;var target=dragState.kind==='section'?e.target.closest('.section-block'):e.target.closest('.body-block');if(!target)return;e.preventDefault();clearDragVisuals();target.classList.add(dropPos(target,e)==='before'?'drop-before':'drop-after');
+});
+document.getElementById('articleSections').addEventListener('drop',function(e){
+  if(!dragState)return;e.preventDefault();var kind=dragState.kind;var target=kind==='section'?e.target.closest('.section-block'):e.target.closest('.body-block');if(!target){clearDragVisuals();dragState=null;return;}var pos=dropPos(target,e);
+  if(kind==='section'){
+    var from=dragState.index,to=+target.dataset.section;if(from===to){clearDragVisuals();dragState=null;return;}var moved=state.body.splice(from,1)[0];if(from<to)to--;if(pos==='after')to++;to=Math.max(0,Math.min(to,state.body.length));state.body.splice(to,0,moved);renderBody();scheduleSave();
+  }else{
+    var fs=dragState.section,fb=dragState.index,ts=+target.dataset.section,tb=+target.dataset.block,src=ensureSectionBlocks(fs),moved=src.splice(fb,1)[0];
+    if(fs===ts){if(fb<tb)tb--;if(pos==='after')tb++;tb=Math.max(0,Math.min(tb,src.length));src.splice(tb,0,moved);}
+    else{var dst=ensureSectionBlocks(ts);if(pos==='after')tb++;tb=Math.max(0,Math.min(tb,dst.length));dst.splice(tb,0,moved);}
+    renderBody();scheduleSave();
+  }
+  clearDragVisuals();dragState=null;
 });
 
 /* ============================================================
@@ -779,13 +1882,100 @@ document.getElementById('pageDesc').addEventListener('input', function(e){
 document.getElementById('btnRead').addEventListener('click', function(){ mode='read'; renderAll(); });
 document.getElementById('btnEdit').addEventListener('click', function(){ mode='edit'; renderAll(); });
 
+
+/* ============================================================
+   RICH TEXT TOOLBAR
+============================================================ */
+var lastEditable=null;
+var savedRange=null;
+function rememberSelection(){
+  var sel=window.getSelection ? window.getSelection() : null;
+  if(!sel || !sel.rangeCount || !lastEditable) return;
+  var range=sel.getRangeAt(0);
+  if(lastEditable.contains(range.commonAncestorContainer)) savedRange=range.cloneRange();
+}
+function restoreSelection(){
+  if(!lastEditable) return false;
+  lastEditable.focus();
+  if(!savedRange) return false;
+  try{
+    var sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(savedRange); return true;
+  }catch(e){ return false; }
+}
+document.addEventListener('focusin',function(e){
+  if(e.target.matches('[contenteditable="true"]')){ lastEditable=e.target; rememberSelection(); }
+});
+document.addEventListener('selectionchange',function(){
+  if(!lastEditable) return;
+  var ae=document.activeElement;
+  if(ae===lastEditable || lastEditable.contains(ae)) rememberSelection();
+  updateFormatButtonStates();
+});
+function updateFormatButtonStates(){
+  if(mode!=='edit') return;
+  document.querySelectorAll('#formatToolbar [data-cmd]').forEach(function(btn){
+    var active=false;
+    try{ active = document.queryCommandState(btn.dataset.cmd); }catch(e){}
+    btn.classList.toggle('active', !!active);
+  });
+}
+document.addEventListener('mouseup',rememberSelection);
+document.addEventListener('keyup',rememberSelection);
+document.querySelectorAll('#formatToolbar [data-cmd]').forEach(function(btn){
+  btn.addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+  btn.addEventListener('click',function(){
+    if(!restoreSelection()){ showToast('👆 Clique dentro de um texto para formatá-lo.'); return; }
+    document.execCommand(btn.dataset.cmd,false,null);rememberSelection();syncActiveRichField();scheduleSave();
+  });
+});
+document.getElementById('btnLink').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnLink').addEventListener('click',function(){
+  if(!restoreSelection()){ showToast('👆 Clique dentro de um texto para adicionar um link.'); return; }
+  var sel=window.getSelection();
+  var url=prompt('Cole o endereço do link (https://...)');
+  if(!url) return;
+  if(!/^https?:\/\//i.test(url)) url='https://'+url;
+  if(!sel || !sel.rangeCount || sel.isCollapsed){
+    // Nada selecionado: em vez de bloquear, pergunta o texto e insere um link novo no cursor.
+    var text = prompt('Nenhum texto foi selecionado. Qual texto deve aparecer como link?', url);
+    if(!text) return;
+    document.execCommand('insertHTML', false, '<a href="'+url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer">'+esc(text)+'</a>');
+  } else {
+    document.execCommand('createLink', false, url);
+  }
+  rememberSelection();syncActiveRichField();scheduleSave();
+});
+document.getElementById('btnClearFormat').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnClearFormat').addEventListener('click',function(){
+  if(!restoreSelection()){ showToast('👆 Clique dentro de um texto para limpar a formatação.'); return; }
+  document.execCommand('removeFormat',false,null);document.execCommand('unlink',false,null);syncActiveRichField();scheduleSave();
+});
+function syncActiveRichField(){if(!lastEditable)return;lastEditable.dispatchEvent(new Event('input',{bubbles:true}));}
+function updateFormatToolbarVisibility(){document.getElementById('formatToolbar').classList.toggle('hidden',mode!=='edit');}
+document.getElementById('btnBlockquote').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnBlockquote').addEventListener('click',function(){
+  if(!restoreSelection()){ showToast('👆 Clique dentro de um texto para transformá-lo em citação.'); return; }
+  document.execCommand('formatBlock',false,'blockquote');syncActiveRichField();scheduleSave();
+});
+document.getElementById('btnPre').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnPre').addEventListener('click',function(){
+  if(!restoreSelection()){ showToast('👆 Clique dentro de um texto para transformá-lo em código.'); return; }
+  document.execCommand('formatBlock',false,'pre');syncActiveRichField();scheduleSave();
+});
 /* ============================================================
    TEMPLATE MODAL
 ============================================================ */
-function openTemplateModal(){
+function renderTemplateGrid(filterText){
   var grid = document.getElementById('templateGrid');
+  var emptyNote = document.getElementById('templateEmptyNote');
   var templates = T();
-  grid.innerHTML = Object.keys(templates).map(function(key){
+  var q = (filterText||'').trim().toLowerCase();
+  var keys = Object.keys(templates).filter(function(key){
+    if(!q) return true;
+    var t = templates[key];
+    return t.name.toLowerCase().indexOf(q) >= 0 || t.desc.toLowerCase().indexOf(q) >= 0;
+  });
+  grid.innerHTML = keys.map(function(key){
     var t = templates[key];
     return '<div class="template-card" data-tpl="'+key+'">'+
       '<div class="emoji">'+t.emoji+'</div>'+
@@ -793,14 +1983,24 @@ function openTemplateModal(){
       '<div class="tdesc">'+esc(t.desc)+'</div>'+
       '</div>';
   }).join('');
+  emptyNote.classList.toggle('hidden', keys.length > 0);
   grid.querySelectorAll('.template-card').forEach(function(card){
     card.addEventListener('click', function(){
       startFromTemplate(card.dataset.tpl);
       closeTemplateModal();
     });
   });
-  document.getElementById('templateModal').classList.remove('hidden');
 }
+function openTemplateModal(){
+  var searchEl = document.getElementById('templateSearch');
+  searchEl.value = '';
+  renderTemplateGrid('');
+  document.getElementById('templateModal').classList.remove('hidden');
+  setTimeout(function(){ searchEl.focus(); }, 30);
+}
+document.getElementById('templateSearch').addEventListener('input', function(e){
+  renderTemplateGrid(e.target.value);
+});
 function closeTemplateModal(){
   document.getElementById('templateModal').classList.add('hidden');
 }
@@ -813,7 +2013,40 @@ function startFromTemplate(key){
 }
 
 document.getElementById('btnNew').addEventListener('click', function(){
+  // bug corrigido: antes isso descartava a página atual (e sobrescrevia o
+  // rascunho salvo automaticamente) sem nenhum aviso.
+  if(state && !confirm('Começar uma nova página vai substituir a página que você está editando agora (e o rascunho salvo automaticamente). Se quiser manter esta página, clique em "Cancelar" e use "Salvar página" antes.\n\nContinuar mesmo assim?')){
+    return;
+  }
   openTemplateModal();
+});
+
+
+/* ============================================================
+   JSON EXPORT / IMPORT
+============================================================ */
+document.getElementById('btnExport').addEventListener('click',function(){
+  if(!state) return;
+  var blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  var fname=(state.title||'pagina').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')||'pagina';
+  a.download=fname+'.json'; document.body.appendChild(a); a.click(); a.remove();
+});
+document.getElementById('btnImport').addEventListener('click',function(){ document.getElementById('jsonInput').click(); });
+document.getElementById('jsonInput').addEventListener('change',function(e){
+  var file=e.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var imported=JSON.parse(ev.target.result);
+      if(!imported || !Array.isArray(imported.infobox) || !Array.isArray(imported.body)) throw new Error('Formato inválido');
+      state=imported; state.body.forEach(function(sec){
+        if(!sec.blocks && sec.text!==undefined) sec.blocks=[{type:'text',html:sec.text}];
+      });
+      mode='edit'; renderAll(); scheduleSave(); alert('Página importada com sucesso.');
+    }catch(err){ alert('Este arquivo JSON não parece ser uma página válida do editor.'); }
+  };
+  reader.readAsText(file); e.target.value='';
 });
 
 /* ============================================================
@@ -833,6 +2066,16 @@ document.getElementById('btnSaveAs').addEventListener('click', function(){
   }).catch(function(){
     alert('Não foi possível salvar agora. Tente novamente.');
   });
+});
+
+document.getElementById('btnDuplicate').addEventListener('click', function(){
+  if(!state){ alert('Crie ou abra uma página antes de duplicar.'); return; }
+  var copy = deepClone(state);
+  copy.title = (copy.title || 'Página sem título') + ' (cópia)';
+  state = copy;
+  mode = 'edit';
+  renderAll();
+  scheduleSave();
 });
 
 function openPagesModal(){
@@ -925,6 +2168,7 @@ document.getElementById('btnDownload').addEventListener('click', function(){
 ============================================================ */
 loadDraft().then(function(draft){
   if(draft){
+    draft.body=(draft.body||[]); draft.body.forEach(function(sec){ if(!sec.blocks && sec.text!==undefined) sec.blocks=[{type:'text',html:sec.text}]; });
     var grid = document.getElementById('templateGrid');
     var bannerWrap = document.getElementById('draftBannerWrap');
     bannerWrap.innerHTML = '<div class="draft-banner"><span>Você tem um rascunho de "'+esc(draft.title||'página sem título')+'" em andamento.</span>'+
