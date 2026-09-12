@@ -365,6 +365,123 @@
   .builder-pop .builder-row{display:flex;gap:6px;flex-wrap:wrap}
   .builder-pop button{font-family:var(--sans);font-size:12px;padding:5px 7px}
 
+  /* ============ AJEITAR IMAGEM (posição / zoom) ============ */
+  .ib-img-holder{position:relative;overflow:hidden;background:var(--wiki-bg);}
+  .body-image-inner{position:relative;overflow:hidden;border-radius:2px;}
+  .body-image-inner img{aspect-ratio:16/9;object-fit:cover;width:100%;height:auto;display:block;}
+  .img-adjust-btn{
+    position:absolute;top:3px;left:3px;display:none;z-index:3;
+    border:1px solid var(--wiki-blue);background:#fff;color:var(--wiki-blue);
+    border-radius:3px;font-size:11px;padding:2px 6px;cursor:pointer;line-height:1.3;
+  }
+  .editing .ib-img-holder:hover .img-adjust-btn,
+  .editing .ib-img-cell:hover .img-adjust-btn,
+  .editing .cell-img-holder:hover .img-adjust-btn,
+  .editing .body-image-inner:hover .img-adjust-btn{display:inline-block;}
+  .img-adjust-btn:hover{background:var(--wiki-blue);color:#fff;}
+  #imgAdjustStage{
+    position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border:1px solid var(--wiki-border);
+    border-radius:4px;background:#111;cursor:grab;touch-action:none;
+  }
+  #imgAdjustStage.grabbing{cursor:grabbing;}
+  #imgAdjustStage img{position:absolute;top:0;left:0;width:100%;height:100%;user-select:none;pointer-events:none;}
+  .adjust-hint{font-size:11.5px;color:var(--gray);margin-top:8px;}
+  .fit-toggle{display:flex;gap:6px;margin-top:12px;}
+  .fit-toggle button{
+    flex:1;border:1px solid var(--wiki-border);background:#fff;color:var(--text);
+    padding:7px 8px;border-radius:4px;font-size:12px;cursor:pointer;font-family:var(--sans);
+  }
+  .fit-toggle button.active{background:var(--wiki-blue);border-color:var(--wiki-blue);color:#fff;font-weight:600;}
+  body.dark-mode .fit-toggle button{background:#2c2c2c;color:#e8e6e3;border-color:#4a4a4a;}
+  body.dark-mode .fit-toggle button.active{background:var(--wiki-blue);color:#111;}
+
+  /* ============ IMAGENS EM CÉLULAS DE TABELA (ex: desempenho eleitoral) ============ */
+  .body-table td{vertical-align:top;}
+  .cell-img-holder{
+    position:relative;width:52px;height:52px;margin:0 auto 4px;overflow:hidden;border-radius:3px;
+    border:1px solid var(--wiki-border);background:var(--wiki-bg);
+  }
+  .cell-img-holder img{width:100%;height:100%;display:block;}
+  .cell-img-holder .img-adjust-btn{top:1px;left:1px;font-size:9px;padding:1px 3px;}
+  .cell-img-del{
+    position:absolute;top:1px;right:1px;display:none;border:1px solid #d33;color:#d33;background:#fff;
+    border-radius:3px;font-size:9px;line-height:1;padding:1px 3px;cursor:pointer;z-index:3;
+  }
+  .editing .cell-img-holder:hover .cell-img-del{display:block;}
+  .cell-img-add{
+    display:block;margin:0 auto 4px;border:1px dashed var(--wiki-border);background:#f8f9fa;color:var(--wiki-blue);
+    border-radius:3px;font-size:10.5px;padding:10px 4px;cursor:pointer;font-family:var(--sans);width:52px;text-align:center;
+  }
+  .cell-img-add:hover{background:#eef4ff;border-color:var(--wiki-blue);}
+  .cell-text{outline:none;min-width:60px;}
+  body.dark-mode .cell-img-add{background:#242424;border-color:#4a4a4a;}
+  body.dark-mode .cell-img-add:hover{background:#28324a;}
+
+  /* ============ MODO ESCURO ============ */
+  #btnDarkMode{white-space:nowrap;}
+  body.dark-mode{
+    --wiki-bg:#2c2c2c; --wiki-border:#4a4a4a; --wiki-section-bg:#3a3a3a;
+    --text:#e8e6e3; --gray:#b3aea3; --wiki-blue:#8ab4f8; --edit-accent:#d9a441;
+    background:#1b1b1b; color:var(--text);
+  }
+  body.dark-mode .wiki-header{background:#222;border-bottom-color:#444;}
+  body.dark-mode .wiki-header .burger,body.dark-mode .wiki-header .icon-btn{color:#ddd;}
+  body.dark-mode .wiki-search{background:#2c2c2c;color:#bbb;border-color:#4a4a4a;}
+  body.dark-mode .editor-toolbar{background:linear-gradient(#2b2410,#241d0c);border-bottom-color:#a97e1f;}
+  body.dark-mode .editor-toolbar .label{color:#e8c477;}
+  body.dark-mode .tbtn{background:#2c2c2c;border-color:#8a6d1f;color:#e8c477;}
+  body.dark-mode .tbtn:hover{background:#3a3220;}
+  body.dark-mode .tbtn.primary{background:#c98600;color:#111;}
+  body.dark-mode #bannerSelect{background:#2c2c2c;border-color:#8a6d1f;color:#e8c477;}
+  body.dark-mode .save-status{color:#e8c477;}
+  body.dark-mode .mode-pill{border-color:#4a4a4a;}
+  body.dark-mode .mode-pill button{background:#2c2c2c;color:#ddd;}
+  body.dark-mode .mode-pill button.active{background:var(--wiki-blue);color:#111;}
+  body.dark-mode .editing .page-title,body.dark-mode .editing .page-desc{background:#2b2607;box-shadow:0 0 0 2px #5c4d16 inset;}
+  body.dark-mode .editing .wiki-para:hover,body.dark-mode .editing .article-body h2:hover{background:#2b2607;border-color:#5c4d16;}
+  body.dark-mode .ib-img-slot{background:#333;border-color:#555;color:#aaa;}
+  body.dark-mode .editing .ib-img-slot:hover{background:#28324a;border-color:var(--wiki-blue);}
+  body.dark-mode .editing .ib-label:hover,body.dark-mode .editing .ib-value:hover,body.dark-mode .editing .ib-section:hover,
+  body.dark-mode .editing .ib-title:hover,body.dark-mode .editing .ib-twocol div:hover,body.dark-mode .editing .ib-list li:hover,
+  body.dark-mode .editing .ib-caption:hover,body.dark-mode .editing .ib-scoreline .team:hover,
+  body.dark-mode .editing .ib-scoreline .score span:hover,body.dark-mode .editing .ib-quote:hover,
+  body.dark-mode .editing .ib-notice:hover{background:#2b2607;box-shadow:0 0 0 1px #8a6d1f inset;}
+  body.dark-mode .ib-addbar{background:#262626;border-top-color:#4a4a4a;}
+  body.dark-mode .ib-addbar-label{color:#ccc;}
+  body.dark-mode .ib-addbar select,body.dark-mode .ib-addbar button{background:#2c2c2c;color:#e8e6e3;border:1px solid #4a4a4a;}
+  body.dark-mode .wiki-maint-banner{background:#3a2f11;border-color:#7a5b1a;}
+  body.dark-mode .modal-overlay{background:rgba(0,0,0,.72);}
+  body.dark-mode .modal-box{background:#242424;color:var(--text);}
+  body.dark-mode .template-search{background:#2c2c2c;border-color:#4a4a4a;color:#eee;}
+  body.dark-mode .template-card{background:#2c2c2c;border-color:#4a4a4a;}
+  body.dark-mode .template-card:hover{background:#28324a;border-color:var(--wiki-blue);}
+  body.dark-mode .template-card .tdesc{color:#aaa;}
+  body.dark-mode .draft-banner{background:#1e2a3d;border-color:var(--wiki-blue);}
+  body.dark-mode .page-item{border-color:#4a4a4a;}
+  body.dark-mode .pi-open,body.dark-mode .pi-del{background:#242424;}
+  body.dark-mode .format-toolbar{background:#242424;border-color:#4a4a4a;}
+  body.dark-mode .fmt-btn{background:#2c2c2c;border-color:#555;color:#e8e6e3;}
+  body.dark-mode .fmt-btn:hover{background:#333;}
+  body.dark-mode .rich-text blockquote,body.dark-mode .body-quote{background:#242424;color:#bbb;}
+  body.dark-mode .body-code,body.dark-mode .rich-text pre{background:#1c1c1c;border-color:#4a4a4a;color:#ddd;}
+  body.dark-mode .mini-builder-btn{background:#2c2c2c;border-color:#555;color:var(--wiki-blue);}
+  body.dark-mode .mini-builder-btn:hover{background:#28324a;}
+  body.dark-mode .drag-handle,body.dark-mode .move-btn{color:#ccc;background:#2c2c2c;border-color:#555;}
+  body.dark-mode .move-btn:hover{background:#28324a;border-color:var(--wiki-blue);}
+  body.dark-mode .body-table th,body.dark-mode .body-table td{border-color:#4a4a4a;}
+  body.dark-mode .body-table th{background:#333;}
+  body.dark-mode .body-notice{background:#242424;border-color:#4a4a4a;}
+  body.dark-mode .body-notice.warning{background:#3a2f11;}
+  body.dark-mode .body-infobox{background:#242424;border-color:#4a4a4a;}
+  body.dark-mode .body-infobox .bi-title{background:#333;}
+  body.dark-mode .body-infobox .bi-row{border-top-color:#4a4a4a;}
+  body.dark-mode .wiki-footer{border-top-color:#4a4a4a;color:#999;}
+  body.dark-mode .builder-pop{background:#242424;border-color:#4a4a4a;}
+  body.dark-mode .empty-note{color:#999;}
+  body.dark-mode #imgAdjustStage{background:#000;border-color:#4a4a4a;}
+  body.dark-mode .img-adjust-btn{background:#242424;}
+  body.dark-mode .badge{background:rgba(255,255,255,.12);}
+
 </style>
 </head>
 <body>
@@ -392,6 +509,7 @@
   <button class="tbtn" id="btnDownload">⬇️ Baixar HTML</button>
   <button class="tbtn" id="btnExport">📤 Exportar JSON</button>
   <button class="tbtn" id="btnImport">📥 Importar JSON</button>
+  <button class="tbtn" id="btnDarkMode" title="Alternar modo escuro">🌙 Modo escuro</button>
   <select id="bannerSelect" class="hidden" title="Aviso de manutenção no topo do artigo"></select>
   <span class="save-status" id="saveStatus"></span>
   <div class="format-toolbar hidden" id="formatToolbar" title="Selecione um texto e clique em um botão para formatá-lo">
@@ -456,6 +574,29 @@
     <div class="pages-list" id="pagesList"></div>
     <div style="margin-top:16px;text-align:right;">
       <button class="tbtn" id="btnClosePages">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE ADJUST MODAL -->
+<div class="modal-overlay hidden" id="imgAdjustModal">
+  <div class="modal-box" style="max-width:420px;">
+    <h2>🖌️ Ajeitar imagem</h2>
+    <p class="sub">Arraste a imagem para posicionar e use o controle para dar zoom.</p>
+    <div id="imgAdjustStage"><img id="imgAdjustPreview" src="" alt=""></div>
+    <div class="fit-toggle">
+      <button type="button" id="imgAdjustFitCover" title="A imagem preenche toda a moldura, cortando as bordas se precisar">✂️ Preencher (cortar)</button>
+      <button type="button" id="imgAdjustFitContain" title="A imagem inteira aparece, sem cortar (pode sobrar espaço nas bordas)">🖼️ Caber inteira (sem cortar)</button>
+    </div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:12px;color:var(--gray);white-space:nowrap;">🔍 Zoom</span>
+      <input type="range" id="imgAdjustZoom" min="100" max="300" value="100" style="flex:1;">
+    </div>
+    <p class="adjust-hint">Dica: clique e arraste dentro do quadro para reposicionar a imagem.</p>
+    <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;">
+      <button class="tbtn" id="imgAdjustReset">↺ Redefinir</button>
+      <button class="tbtn" id="imgAdjustCancel">Cancelar</button>
+      <button class="tbtn primary" id="imgAdjustApply">✓ Aplicar</button>
     </div>
   </div>
 </div>
@@ -913,20 +1054,38 @@ function T(){ return {
     body:[{heading:null, text:'Escreva aqui a introdução sobre a língua.'},{heading:'Fonologia', text:'Sons e pronúncia característicos.'},{heading:'Gramática', text:'Estrutura gramatical básica.'}]
   },
   partido: {
-    emoji:'🏛️', name:'Partido político', desc:'Ficha de partido com líder, ideologia e espectro político.',
+    emoji:'🏛️', name:'Partido político', desc:'Ficha de partido com líder, ideologia, espectro político e desempenho eleitoral.',
     title:'Nome do Partido', subtitle:'sigla — partido político',
     infobox:[
       {t:'title', text:'Nome do Partido'},
       {t:'imggrid', items:[{src:null,caption:'Logotipo'}]},
+      {t:'row', label:'Sigla', value:'SIGLA'},
+      {t:'row', label:'Slogan', value:'Slogan oficial, se houver'},
+      {t:'row', label:'Presidente', value:'Nome do(a) presidente'},
       {t:'row', label:'Líder', value:'Nome do(a) líder'},
       {t:'row', label:'Fundação', value:'dd de mês de aaaa'},
       {t:'row', label:'Sede', value:'Cidade, País'},
       {t:'row', label:'Ideologia', value:'Ex: Descrição ideológica'},
       {t:'row', label:'Espectro político', value:'Ex: Centro'},
+      {t:'row', label:'Número eleitoral', value:'Ex: 00'},
       {t:'row', label:'Membros', value:'Ex: 100.000 (ano)'},
+      {t:'row', label:'Cor(es)', value:'Ex: Azul e branco'},
+      {t:'section', text:'Representação'},
+      {t:'row', label:'Câmara dos Deputados', value:'0 / 513'},
+      {t:'row', label:'Senado Federal', value:'0 / 81'},
       {t:'row', label:'Site oficial', value:'www.exemplo.com'}
     ],
-    body:[{heading:null, text:'Escreva aqui a introdução sobre o partido.'},{heading:'História', text:'Fundação e trajetória do partido.'},{heading:'Ideologia', text:'Principais posições e propostas.'}]
+    body:[
+      {heading:null, text:'Escreva aqui a introdução sobre o partido.'},
+      {heading:'História', text:'Fundação e trajetória do partido.'},
+      {heading:'Ideologia', text:'Principais posições e propostas.'},
+      {heading:'Participação do partido nas eleições presidenciais', blocks:[
+        {type:'table', rows:[
+          ['Ano','Imagem','Candidato a Presidente','Candidato a Vice-Presidente','Coligação','Votos','%','Colocação'],
+          ['aaaa','','Nome do candidato\n(SIGLA)','Nome do vice\n(SIGLA)','Nome da coligação','0','0,00%','0º']
+        ]}
+      ]}
+    ]
   },
   missao_espacial: {
     emoji:'🚀', name:'Missão espacial', desc:'Ficha de missão espacial com foguete, lançamento e objetivos.',
@@ -1174,12 +1333,21 @@ var state = null;
 var mode = 'read';
 var pendingImg = null; // {idx, ci}
 var pendingBodyImg = null;
+var pendingTableImg = null; // {section, block, ri, ci}
 var saveTimer = null;
 
 function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
 function esc(s){
   s = (s===undefined || s===null) ? '' : String(s);
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function imgStyleFor(obj){
+  var x=(obj && obj.posX!=null)?obj.posX:50;
+  var y=(obj && obj.posY!=null)?obj.posY:50;
+  var z=(obj && obj.zoom)?obj.zoom:1;
+  var fit=(obj && obj.fit)?obj.fit:'cover';
+  return 'object-fit:'+fit+';object-position:'+x+'% '+y+'%;transform:scale('+z+');transform-origin:'+x+'% '+y+'%;';
 }
 
 function escRich(s){
@@ -1350,7 +1518,8 @@ function renderInfobox(){
       var cls = n<=1 ? '' : (n===2?'n2':(n===3?'n3':'n4'));
       var cells = item.items.map(function(im, ci){
         var inner = im.src
-          ? '<img src="'+im.src+'" data-imgidx="'+idx+'" data-imgci="'+ci+'">'
+          ? '<div class="ib-img-holder"><img src="'+im.src+'" data-imgidx="'+idx+'" data-imgci="'+ci+'" style="'+imgStyleFor(im)+'">'+
+            (mode==='edit' ? '<button class="img-adjust-btn" data-adjustimg="'+idx+'" data-adjustci="'+ci+'" title="Ajeitar imagem">🖌️ Ajeitar</button>' : '')+'</div>'
           : '<div class="ib-img-slot" data-imgidx="'+idx+'" data-imgci="'+ci+'">'+(mode==='edit' ? '🖼️ clique para adicionar imagem' : '')+'</div>';
         return '<div class="ib-img-cell">'+inner+'<div class="ib-caption" contenteditable data-idx="'+idx+'" data-field="caption" data-ci="'+ci+'">'+escRich(im.caption)+'</div></div>';
       }).join('');
@@ -1359,7 +1528,8 @@ function renderInfobox(){
               '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     } else if(item.t === 'image'){
       var inner2 = item.src
-        ? '<img src="'+item.src+'" data-imgidx="'+idx+'" style="width:100%;display:block;">'
+        ? '<div class="ib-img-holder"><img src="'+item.src+'" data-imgidx="'+idx+'" style="width:100%;display:block;'+imgStyleFor(item)+'">'+
+          (mode==='edit' ? '<button class="img-adjust-btn" data-adjustimg="'+idx+'" title="Ajeitar imagem">🖌️ Ajeitar</button>' : '')+'</div>'
         : '<div class="ib-img-slot" data-imgidx="'+idx+'" style="aspect-ratio:1/1;">'+(mode==='edit' ? '🖼️ clique para adicionar imagem' : '')+'</div>';
       html += '<div class="ib-imggrid-wrap" data-item-wrap="'+idx+'" style="padding:6px;">'+handle+inner2+
               '<div class="ib-caption" style="text-align:center;font-size:11.5px;color:#54595d;" contenteditable data-idx="'+idx+'" data-field="caption">'+escRich(item.caption)+'</div>'+
@@ -1451,6 +1621,8 @@ function renderBody(){
         '<button class="mini-builder-btn" data-addblock="gallery" data-section="'+i+'" title="Adicionar uma galeria com várias imagens">▦ Galeria</button>'+
         '<button class="mini-builder-btn" data-addblock="infobox" data-section="'+i+'" title="Adicionar uma mini-ficha dentro da seção">▤ Infobox</button>'+
         '<button class="mini-builder-btn" data-addblock="table" data-section="'+i+'" title="Adicionar uma tabela">▦ Tabela</button>'+
+        '<button class="mini-builder-btn" data-addblock="eleicao" data-section="'+i+'" title="Adicionar tabela de desempenho eleitoral (candidatos, votos, %, colocação)">🗳️ Desempenho eleitoral</button>'+
+        '<button class="mini-builder-btn" data-addblock="filmografia" data-section="'+i+'" title="Adicionar tabela de filmografia / discografia">🎬 Filmografia</button>'+
         '<button class="mini-builder-btn" data-addblock="quote" data-section="'+i+'" title="Adicionar uma citação em destaque">❝ Citação</button>'+
         '<button class="mini-builder-btn" data-addblock="notice" data-section="'+i+'" title="Adicionar uma caixa de aviso">ℹ Aviso</button>'+
         '<button class="mini-builder-btn" data-addblock="code" data-section="'+i+'" title="Adicionar um bloco de código">{" + "} Código</button>'+
@@ -1488,12 +1660,14 @@ function renderBodyBlock(block, si, bi, total){
     h+='<div class="rich-text" contenteditable data-block-field="html" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.html||block.text||'')+'</div>';
   } else if(block.type==='image'){
     h+='<figure class="body-image '+(block.align||'')+'"><div class="body-image-inner">';
-    h+=block.src?'<img src="'+block.src+'" data-bodyimg="'+si+'" data-blockimg="'+bi+'">':'<div class="ib-img-slot" data-bodyimg="'+si+'" data-blockimg="'+bi+'">🖼️ clique para adicionar imagem</div>';
+    h+=block.src?('<img src="'+block.src+'" data-bodyimg="'+si+'" data-blockimg="'+bi+'" style="'+imgStyleFor(block)+'">'+
+      (mode==='edit'?'<button class="img-adjust-btn" data-adjustbodyimg="'+si+'" data-adjustblockimg="'+bi+'" title="Ajeitar imagem">🖌️ Ajeitar</button>':'')):'<div class="ib-img-slot" data-bodyimg="'+si+'" data-blockimg="'+bi+'">🖼️ clique para adicionar imagem</div>';
     h+='</div><figcaption contenteditable data-block-field="caption" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.caption||'Legenda da imagem')+'</figcaption></figure>';
   } else if(block.type==='gallery'){
     var items=Array.isArray(block.items)?block.items:[{src:null,caption:'Imagem 1'},{src:null,caption:'Imagem 2'}];
     h+='<div class="ib-imggrid '+(items.length===2?'n2':'n3')+'">'+items.map(function(im,ci){
-      return '<div class="ib-img-cell">'+(im.src?'<img src="'+im.src+'" data-galleryimg="'+si+'" data-blockimg="'+bi+'" data-ci="'+ci+'">':'<div class="ib-img-slot" data-galleryimg="'+si+'" data-blockimg="'+bi+'" data-ci="'+ci+'">🖼️ adicionar</div>')+
+      return '<div class="ib-img-cell">'+(im.src?('<div class="ib-img-holder"><img src="'+im.src+'" data-galleryimg="'+si+'" data-blockimg="'+bi+'" data-ci="'+ci+'" style="'+imgStyleFor(im)+'">'+
+        (mode==='edit'?'<button class="img-adjust-btn" data-adjustgalleryimg="'+si+'" data-adjustblockimg="'+bi+'" data-adjustci="'+ci+'" title="Ajeitar imagem">🖌️ Ajeitar</button>':'')+'</div>'):'<div class="ib-img-slot" data-galleryimg="'+si+'" data-blockimg="'+bi+'" data-ci="'+ci+'">🖼️ adicionar</div>')+
         '<div class="ib-caption" contenteditable data-block-field="galleryCaption" data-section="'+si+'" data-block="'+bi+'" data-ci="'+ci+'">'+escRich(im.caption||'Legenda')+'</div></div>';
     }).join('')+'</div>';
     if(mode==='edit') h+='<div class="section-tools"><button class="mini-builder-btn" data-addgalleryitem="'+si+'" data-block="'+bi+'">＋ adicionar imagem</button></div>';
@@ -1510,8 +1684,21 @@ function renderBodyBlock(block, si, bi, total){
       }).join('')+'</div>';
   } else if(block.type==='table'){
     var rows=block.rows||[['Cabeçalho 1','Cabeçalho 2'],['Valor','Valor']];
+    var cellImgs=block.cellImages||{};
     h+='<div class="body-table-wrap"><table class="body-table"><thead><tr>'+rows[0].map(function(c,ci){return '<th contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="0" data-ci="'+ci+'">'+escRich(c)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.slice(1).map(function(r,ri){
-      return '<tr>'+r.map(function(c,ci){return '<td contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="'+(ri+1)+'" data-ci="'+ci+'">'+escRich(c)+'</td>';}).join('')+'</tr>';
+      var realRi=ri+1;
+      return '<tr>'+r.map(function(c,ci){
+        var key=realRi+'-'+ci, cimg=cellImgs[key], cellExtra='';
+        if(cimg && cimg.src){
+          cellExtra='<div class="cell-img-holder"><img src="'+cimg.src+'" style="'+imgStyleFor(cimg)+'">'+
+            (mode==='edit'?'<button class="img-adjust-btn" data-adjusttableimg="'+si+'" data-adjusttableblock="'+bi+'" data-adjustri="'+realRi+'" data-adjustci="'+ci+'" title="Ajeitar imagem">🖌️</button>':'')+
+            (mode==='edit'?'<button class="cell-img-del" data-deltableimg="'+si+'" data-deltableblock="'+bi+'" data-delri="'+realRi+'" data-delci="'+ci+'" title="Remover imagem">×</button>':'')+
+          '</div>';
+        } else if(mode==='edit'){
+          cellExtra='<button class="cell-img-add" data-addtableimg="'+si+'" data-addtableblock="'+bi+'" data-addri="'+realRi+'" data-addci="'+ci+'" title="Adicionar imagem nesta célula">🖼️ imagem</button>';
+        }
+        return '<td>'+cellExtra+'<div class="cell-text" contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="'+realRi+'" data-ci="'+ci+'">'+escRich(c)+'</div></td>';
+      }).join('')+'</tr>';
     }).join('')+'</tbody></table></div>'+
     (mode==='edit'?'<div class="section-tools"><button class="mini-builder-btn" data-addtablerow="'+si+'" data-block="'+bi+'">＋ linha</button><button class="mini-builder-btn" data-addtablecol="'+si+'" data-block="'+bi+'">＋ coluna</button></div>':'');
   } else {
@@ -1672,8 +1859,16 @@ document.getElementById('infobox').addEventListener('click', function(e){
     renderInfobox(); scheduleSave();
     return;
   }
+  if(mode === 'edit' && t.dataset && t.dataset.adjustimg !== undefined){
+    var aIdx = parseInt(t.dataset.adjustimg,10);
+    var aCi = t.dataset.adjustci !== undefined ? parseInt(t.dataset.adjustci,10) : null;
+    var aObj = aCi !== null ? state.infobox[aIdx].items[aCi] : state.infobox[aIdx];
+    openImgAdjust(aObj, renderInfobox);
+    return;
+  }
   if(mode === 'edit' && t.dataset && t.dataset.imgidx !== undefined){
     pendingImg = { idx: parseInt(t.dataset.imgidx,10), ci: t.dataset.imgci !== undefined ? parseInt(t.dataset.imgci,10) : null };
+    pendingBodyImg = null; pendingTableImg = null;
     document.getElementById('fileInput').click();
   }
 });
@@ -1705,7 +1900,7 @@ function addInfoboxRow(type){
 
 document.getElementById('fileInput').addEventListener('change', function(e){
   var file = e.target.files[0];
-  if(!file || !pendingImg) return;
+  if(!file || !(pendingImg || pendingBodyImg || pendingTableImg)) return;
   var reader = new FileReader();
   reader.onload = function(ev){
     var dataUrl = ev.target.result;
@@ -1722,12 +1917,122 @@ document.getElementById('fileInput').addEventListener('change', function(e){
       else { block.src=dataUrl; }
       pendingBodyImg=null;
       renderBody();
+    } else if(pendingTableImg){
+      var ts=pendingTableImg.section, tbk=pendingTableImg.block;
+      var tblock=ensureSectionBlocks(ts)[tbk];
+      if(!tblock.cellImages) tblock.cellImages={};
+      var tkey=pendingTableImg.ri+'-'+pendingTableImg.ci;
+      tblock.cellImages[tkey] = { src:dataUrl, posX:50, posY:50, zoom:1, fit:'cover' };
+      pendingTableImg=null;
+      renderBody();
     }
     scheduleSave();
   };
   reader.readAsDataURL(file);
   e.target.value = '';
 });
+
+/* ============================================================
+   AJEITAR IMAGEM (posicionar / dar zoom)
+============================================================ */
+var pendingAdjust = null;
+function openImgAdjust(obj, renderFn){
+  if(!obj || !obj.src) return;
+  pendingAdjust = { obj:obj, render:renderFn, posX:(obj.posX!=null?obj.posX:50), posY:(obj.posY!=null?obj.posY:50), zoom:(obj.zoom||1), fit:(obj.fit||'cover') };
+  document.getElementById('imgAdjustPreview').src = obj.src;
+  document.getElementById('imgAdjustZoom').value = Math.round(pendingAdjust.zoom*100);
+  updateAdjustPreview();
+  updateFitButtons();
+  document.getElementById('imgAdjustModal').classList.remove('hidden');
+}
+function updateFitButtons(){
+  if(!pendingAdjust) return;
+  document.getElementById('imgAdjustFitCover').classList.toggle('active', pendingAdjust.fit==='cover');
+  document.getElementById('imgAdjustFitContain').classList.toggle('active', pendingAdjust.fit==='contain');
+}
+function updateAdjustPreview(){
+  if(!pendingAdjust) return;
+  var img = document.getElementById('imgAdjustPreview');
+  img.style.objectFit = pendingAdjust.fit;
+  img.style.objectPosition = pendingAdjust.posX+'% '+pendingAdjust.posY+'%';
+  img.style.transform = 'scale('+pendingAdjust.zoom+')';
+  img.style.transformOrigin = pendingAdjust.posX+'% '+pendingAdjust.posY+'%';
+}
+document.getElementById('imgAdjustFitCover').addEventListener('click', function(){
+  if(!pendingAdjust) return;
+  pendingAdjust.fit = 'cover';
+  updateAdjustPreview(); updateFitButtons();
+});
+document.getElementById('imgAdjustFitContain').addEventListener('click', function(){
+  if(!pendingAdjust) return;
+  pendingAdjust.fit = 'contain';
+  updateAdjustPreview(); updateFitButtons();
+});
+(function(){
+  var stage = document.getElementById('imgAdjustStage');
+  var dragging = false, lastX = 0, lastY = 0;
+  function startDrag(x,y){ if(!pendingAdjust) return; dragging = true; lastX = x; lastY = y; stage.classList.add('grabbing'); }
+  function moveDrag(x,y){
+    if(!dragging || !pendingAdjust) return;
+    var rect = stage.getBoundingClientRect();
+    var dx = (x-lastX)/rect.width*100, dy = (y-lastY)/rect.height*100;
+    pendingAdjust.posX = Math.max(0,Math.min(100, pendingAdjust.posX - dx));
+    pendingAdjust.posY = Math.max(0,Math.min(100, pendingAdjust.posY - dy));
+    lastX = x; lastY = y;
+    updateAdjustPreview();
+  }
+  function endDrag(){ dragging = false; stage.classList.remove('grabbing'); }
+  stage.addEventListener('mousedown', function(e){ startDrag(e.clientX, e.clientY); });
+  window.addEventListener('mousemove', function(e){ moveDrag(e.clientX, e.clientY); });
+  window.addEventListener('mouseup', endDrag);
+  stage.addEventListener('touchstart', function(e){ var t=e.touches[0]; startDrag(t.clientX, t.clientY); }, {passive:true});
+  stage.addEventListener('touchmove', function(e){ var t=e.touches[0]; moveDrag(t.clientX, t.clientY); e.preventDefault(); }, {passive:false});
+  stage.addEventListener('touchend', endDrag);
+})();
+document.getElementById('imgAdjustZoom').addEventListener('input', function(e){
+  if(!pendingAdjust) return;
+  pendingAdjust.zoom = parseInt(e.target.value,10)/100;
+  updateAdjustPreview();
+});
+document.getElementById('imgAdjustReset').addEventListener('click', function(){
+  if(!pendingAdjust) return;
+  pendingAdjust.posX = 50; pendingAdjust.posY = 50; pendingAdjust.zoom = 1; pendingAdjust.fit = 'cover';
+  document.getElementById('imgAdjustZoom').value = 100;
+  updateAdjustPreview();
+  updateFitButtons();
+});
+document.getElementById('imgAdjustCancel').addEventListener('click', function(){
+  pendingAdjust = null;
+  document.getElementById('imgAdjustModal').classList.add('hidden');
+});
+document.getElementById('imgAdjustApply').addEventListener('click', function(){
+  if(!pendingAdjust) return;
+  pendingAdjust.obj.posX = pendingAdjust.posX;
+  pendingAdjust.obj.posY = pendingAdjust.posY;
+  pendingAdjust.obj.zoom = pendingAdjust.zoom;
+  pendingAdjust.obj.fit = pendingAdjust.fit;
+  var renderFn = pendingAdjust.render;
+  pendingAdjust = null;
+  document.getElementById('imgAdjustModal').classList.add('hidden');
+  renderFn();
+  scheduleSave();
+});
+
+/* ============================================================
+   MODO ESCURO
+============================================================ */
+function applyDarkMode(on){
+  document.body.classList.toggle('dark-mode', !!on);
+  var btn = document.getElementById('btnDarkMode');
+  if(btn) btn.textContent = on ? '☀️ Modo claro' : '🌙 Modo escuro';
+  try{ localStorage.setItem('wikiEditorDark', on ? '1' : '0'); }catch(e){}
+}
+document.getElementById('btnDarkMode').addEventListener('click', function(){
+  applyDarkMode(!document.body.classList.contains('dark-mode'));
+});
+(function(){
+  try{ if(localStorage.getItem('wikiEditorDark')==='1') applyDarkMode(true); }catch(e){}
+})();
 
 document.getElementById('articleBody').addEventListener('input', function(e){
   var el=e.target;
@@ -1787,7 +2092,44 @@ document.getElementById('articleBody').addEventListener('click', function(e){
     var tcs=parseInt(e.target.dataset.addtablecol,10), tcb=parseInt(e.target.dataset.block,10);
     var tab=ensureSectionBlocks(tcs)[tcb]; tab.rows.forEach(function(r,ri){ r.push(ri===0?'Novo cabeçalho':'Valor'); }); renderBody(); scheduleSave(); return;
   }
+  if(mode==='edit' && e.target.dataset && (e.target.dataset.adjustbodyimg!==undefined || e.target.dataset.adjustgalleryimg!==undefined)){
+    var abSi=parseInt(e.target.dataset.adjustbodyimg!==undefined?e.target.dataset.adjustbodyimg:e.target.dataset.adjustgalleryimg,10);
+    var abBi=parseInt(e.target.dataset.adjustblockimg,10);
+    var abCi=e.target.dataset.adjustci!==undefined?parseInt(e.target.dataset.adjustci,10):null;
+    var abBlk=ensureSectionBlocks(abSi)[abBi];
+    var abObj=abCi!==null?abBlk.items[abCi]:abBlk;
+    openImgAdjust(abObj, renderBody);
+    return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.adjusttableimg!==undefined){
+    var atSi=parseInt(e.target.dataset.adjusttableimg,10), atBi=parseInt(e.target.dataset.adjusttableblock,10);
+    var atRi=parseInt(e.target.dataset.adjustri,10), atCi=parseInt(e.target.dataset.adjustci,10);
+    var atBlk=ensureSectionBlocks(atSi)[atBi];
+    var atObj=atBlk.cellImages && atBlk.cellImages[atRi+'-'+atCi];
+    openImgAdjust(atObj, renderBody);
+    return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.addtableimg!==undefined){
+    pendingImg = null; pendingBodyImg = null;
+    pendingTableImg = {
+      section: parseInt(e.target.dataset.addtableimg,10),
+      block: parseInt(e.target.dataset.addtableblock,10),
+      ri: parseInt(e.target.dataset.addri,10),
+      ci: parseInt(e.target.dataset.addci,10)
+    };
+    document.getElementById('fileInput').click();
+    return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.deltableimg!==undefined){
+    var dtSi=parseInt(e.target.dataset.deltableimg,10), dtBi=parseInt(e.target.dataset.deltableblock,10);
+    var dtRi=parseInt(e.target.dataset.delri,10), dtCi=parseInt(e.target.dataset.delci,10);
+    var dtBlk=ensureSectionBlocks(dtSi)[dtBi];
+    if(dtBlk.cellImages) delete dtBlk.cellImages[dtRi+'-'+dtCi];
+    renderBody(); scheduleSave();
+    return;
+  }
   if(mode==='edit' && e.target.dataset && (e.target.dataset.bodyimg!==undefined || e.target.dataset.galleryimg!==undefined)){
+    pendingImg = null; pendingTableImg = null;
     pendingBodyImg={
       section:parseInt(e.target.dataset.bodyimg!==undefined?e.target.dataset.bodyimg:e.target.dataset.galleryimg,10),
       block:parseInt(e.target.dataset.blockimg,10),
@@ -1825,6 +2167,14 @@ function addBodyBlock(sectionIndex, type){
     gallery:{type:'gallery',items:[{src:null,caption:'Imagem 1'},{src:null,caption:'Imagem 2'}]},
     infobox:{type:'infobox',title:'Infobox da seção',rows:[{label:'Campo',value:'Valor'},{label:'Outro campo',value:'Valor'}]},
     table:{type:'table',rows:[['Cabeçalho 1','Cabeçalho 2'],['Valor','Valor']]},
+    eleicao:{type:'table',rows:[
+      ['Ano','Imagem','Candidato a Presidente','Candidato a Vice-Presidente','Coligação','Votos','%','Colocação'],
+      ['aaaa','','Nome do candidato\n(SIGLA)','Nome do vice\n(SIGLA)','Nome da coligação','0','0,00%','0º']
+    ]},
+    filmografia:{type:'table',rows:[
+      ['Ano','Título','Papel/Função','Observações'],
+      ['aaaa','Nome da obra','Personagem/Função','']
+    ]},
     quote:{type:'quote',html:'Escreva uma citação ou destaque.'},
     notice:{type:'notice',variant:'',html:'Escreva um aviso ou nota.'},
     code:{type:'code',html:'Digite o código aqui.'}
@@ -2149,7 +2499,11 @@ document.getElementById('btnDownload').addEventListener('click', function(){
     '<div class="infobox">'+document.getElementById('infobox').innerHTML+'</div></div></main>'+
     '<footer class="wiki-footer">Este site é um projeto paródia / brincadeira no estilo Wikipédia. Não é afiliado à Wikimedia Foundation.</footer>'+
     '<div class="badge">🛠️ Página criada com Wikipédia Editor (paródia)</div>'+
-    '<script>document.querySelectorAll(".collapse-arrow").forEach(function(a){a.style.cursor="pointer";a.addEventListener("click",function(){a.classList.toggle("collapsed");var p=a.closest(".section-header").nextElementSibling;if(p)p.classList.toggle("collapsed");});});<\/script>'+
+    '<button id="staticDarkToggle" title="Alternar modo escuro" style="position:fixed;bottom:10px;left:10px;z-index:15;background:rgba(32,33,34,.85);color:#fff;border:none;font-size:11px;padding:5px 10px;border-radius:14px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',Helvetica,Arial,sans-serif;">🌙 Modo escuro</button>'+
+    '<script>document.querySelectorAll(".collapse-arrow").forEach(function(a){a.style.cursor="pointer";a.addEventListener("click",function(){a.classList.toggle("collapsed");var p=a.closest(".section-header").nextElementSibling;if(p)p.classList.toggle("collapsed");});});'+
+    'var sdt=document.getElementById("staticDarkToggle");function setDark(on){document.body.classList.toggle("dark-mode",!!on);sdt.textContent=on?"☀️ Modo claro":"🌙 Modo escuro";try{localStorage.setItem("wikiPageDark",on?"1":"0");}catch(e){}}'+
+    'sdt.addEventListener("click",function(){setDark(!document.body.classList.contains("dark-mode"));});'+
+    'try{if(localStorage.getItem("wikiPageDark")==="1")setDark(true);}catch(e){}<\/script>'+
     '</body></html>';
   var blob = new Blob([pageHtml], {type:'text/html'});
   var a = document.createElement('a');
