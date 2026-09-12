@@ -17,6 +17,7 @@
     --edit-accent:#eaa500;
   }
   *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
   html,body{margin:0;padding:0;background:#fff;color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;}
   a{color:var(--wiki-blue);text-decoration:none;cursor:default;}
 
@@ -91,7 +92,7 @@
   .article-body p, .wiki-para{margin:0 0 14px;}
   .article-body h2{
     font-family:var(--serif);font-weight:400;font-size:22px;
-    padding-bottom:4px;margin:0;outline:none;flex:1;
+    padding-bottom:4px;margin:0;outline:none;flex:1;scroll-margin-top:115px;
   }
   .section-header{
     display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--wiki-border);
@@ -155,6 +156,25 @@
   .ib-scoreline .score span{outline:none;min-width:20px;text-align:center;}
   .ib-quote{font-family:var(--serif);font-style:italic;padding:8px 10px;border-top:1px solid #e2e2e2;border-left:3px solid var(--wiki-blue);font-size:12.5px;outline:none;}
   .ib-notice{border-top:1px solid #e2e2e2;border-left:3px solid #e6a817;background:#fef6e7;padding:6px 8px;font-size:11.5px;outline:none;}
+  .ib-rating-wrap{border-top:1px solid #e2e2e2;padding:6px 8px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .ib-rating-label{font-weight:700;outline:none;}
+  .ib-rating-wrap .stars{display:inline-flex;gap:1px;font-size:15px;color:#e6a817;letter-spacing:1px;}
+  .editing .ib-rating-wrap .stars .star{cursor:pointer;}
+  .ib-rating-wrap .stars .star:hover{transform:scale(1.15);}
+  .ib-tags-wrap{border-top:1px solid #e2e2e2;padding:6px 8px;}
+  .ib-tags-label{font-weight:700;display:block;margin-bottom:4px;outline:none;}
+  .ib-tags{display:flex;flex-wrap:wrap;gap:4px;}
+  .ib-tag{background:var(--wiki-section-bg);border:1px solid var(--wiki-border);border-radius:10px;
+    padding:2px 9px;font-size:11.5px;outline:none;position:relative;}
+  .editing .ib-tag:hover{background:#fffdf5;box-shadow:0 0 0 1px #ffb700 inset;}
+  .ib-tag-del{position:absolute;top:-6px;right:-6px;display:none;background:#fff;border:1px solid #d33;color:#d33;
+    border-radius:50%;width:13px;height:13px;font-size:9px;line-height:11px;text-align:center;cursor:pointer;padding:0;}
+  .editing .ib-tag:hover .ib-tag-del{display:block;}
+  .ib-tags-addbtn{font-size:11px;color:var(--wiki-blue);cursor:pointer;margin-top:3px;display:inline-block;}
+  .ib-coord-wrap{border-top:1px solid #e2e2e2;padding:6px 8px;}
+  .ib-coord{display:flex;align-items:center;gap:6px;font-size:12.5px;}
+  .ib-coord .globe-ic{flex:none;}
+  .ib-coord .coord-val{outline:none;flex:1;}
 
   .row-del{
     display:none;position:absolute;top:2px;right:2px;background:#fff;border:1px solid #d33;color:#d33;
@@ -164,14 +184,16 @@
   .editing .ib-twocol-wrap .row-del, .editing .ib-list-wrap .row-del,
   .editing .ib-imggrid-wrap .row-del, .editing .ib-scoreline-wrap .row-del,
   .editing .ib-quote-wrap .row-del, .editing .ib-notice-wrap .row-del,
-  .editing .ib-divider-wrap .row-del{display:block;opacity:.6;}
+  .editing .ib-divider-wrap .row-del, .editing .ib-rating-wrap .row-del,
+  .editing .ib-tags-wrap .row-del, .editing .ib-coord-wrap .row-del{display:block;opacity:.6;}
   .editing .ib-row:hover .row-del, .editing .ib-section-wrap:hover .row-del,
   .editing .ib-twocol-wrap:hover .row-del, .editing .ib-list-wrap:hover .row-del,
   .editing .ib-imggrid-wrap:hover .row-del, .editing .ib-scoreline-wrap:hover .row-del,
   .editing .ib-quote-wrap:hover .row-del, .editing .ib-notice-wrap:hover .row-del,
-  .editing .ib-divider-wrap:hover .row-del{opacity:1;}
+  .editing .ib-divider-wrap:hover .row-del, .editing .ib-rating-wrap:hover .row-del,
+  .editing .ib-tags-wrap:hover .row-del, .editing .ib-coord-wrap:hover .row-del{opacity:1;}
   .ib-section-wrap,.ib-twocol-wrap,.ib-list-wrap,.ib-imggrid-wrap,.ib-scoreline-wrap,.ib-title-wrap,.ib-divider-wrap,
-  .ib-quote-wrap,.ib-notice-wrap{position:relative;}
+  .ib-quote-wrap,.ib-notice-wrap,.ib-rating-wrap,.ib-tags-wrap,.ib-coord-wrap{position:relative;}
 
   .editing .ib-label:hover,.editing .ib-value:hover,.editing .ib-section:hover,.editing .ib-title:hover,
   .editing .ib-twocol div:hover,.editing .ib-list li:hover,.editing .ib-caption:hover,.editing .ib-scoreline .team:hover,
@@ -340,6 +362,22 @@
     border:1px solid #a2a9b1;border-left:5px solid #36c;background:#f8f9fa;padding:10px 12px;
   }
   .body-notice.warning{border-left-color:#a66e00;background:#fef6e7}
+  .cell-color-btn{display:inline-block;margin:0 3px 4px 0;border:1px solid var(--wiki-border);background:#fff;color:#333;
+    border-radius:3px;font-size:9.5px;padding:1px 5px;cursor:pointer;font-family:var(--sans);vertical-align:middle;}
+  .cell-color-btn:hover{background:#eef4ff;border-color:var(--wiki-blue);}
+  body.dark-mode .cell-color-btn{background:#2c2c2c;border-color:#4a4a4a;color:#ddd;}
+  body.dark-mode .cell-color-btn:hover{background:#28324a;}
+  .cell-del-btn{display:inline-block;margin:0 3px 4px 0;border:1px solid #d33;background:#fff;color:#d33;
+    border-radius:3px;font-size:9.5px;padding:1px 5px;cursor:pointer;font-family:var(--sans);vertical-align:middle;}
+  .cell-del-btn:hover{background:#fdeaea;}
+  body.dark-mode .cell-del-btn{background:#2c2c2c;border-color:#a44;color:#f19;}
+  body.dark-mode .cell-del-btn:hover{background:#3a2323;}
+  .table-title{font-weight:700;text-align:center;font-size:14px;padding:2px 4px 6px;outline:none;}
+  .editing .table-title:hover{outline:1px dashed #ffb700;background:#fffdf5;}
+  .table-title:empty:before{content:'+ título da tabela (opcional, clique para escrever)';color:var(--gray);font-style:italic;font-weight:400;}
+  body.dark-mode .table-title:empty:before{color:#aaa;}
+  .swatch-btn{width:28px;height:28px;border-radius:5px;border:1px solid #999;cursor:pointer;padding:0;}
+  .swatch-btn.none{background-image:linear-gradient(45deg,#ccc 25%,transparent 25%,transparent 75%,#ccc 75%),linear-gradient(45deg,#ccc 25%,transparent 25%,transparent 75%,#ccc 75%);background-size:8px 8px;background-position:0 0,4px 4px;background-color:#fff;}
   .body-infobox{
     max-width:420px;border:1px solid var(--wiki-border);background:#fff;margin:12px 0;
     font-family:var(--sans);font-size:13px;
@@ -446,6 +484,8 @@
   body.dark-mode .editing .ib-caption:hover,body.dark-mode .editing .ib-scoreline .team:hover,
   body.dark-mode .editing .ib-scoreline .score span:hover,body.dark-mode .editing .ib-quote:hover,
   body.dark-mode .editing .ib-notice:hover{background:#2b2607;box-shadow:0 0 0 1px #8a6d1f inset;}
+  body.dark-mode .ib-tag{background:#333;border-color:#555;}
+  body.dark-mode .editing .ib-tag:hover{background:#2b2607;box-shadow:0 0 0 1px #8a6d1f inset;}
   body.dark-mode .ib-addbar{background:#262626;border-top-color:#4a4a4a;}
   body.dark-mode .ib-addbar-label{color:#ccc;}
   body.dark-mode .ib-addbar select,body.dark-mode .ib-addbar button{background:#2c2c2c;color:#e8e6e3;border:1px solid #4a4a4a;}
@@ -510,6 +550,11 @@
   <button class="tbtn" id="btnExport">📤 Exportar JSON</button>
   <button class="tbtn" id="btnImport">📥 Importar JSON</button>
   <button class="tbtn" id="btnDarkMode" title="Alternar modo escuro">🌙 Modo escuro</button>
+  <span class="font-scale-group" style="display:inline-flex;gap:4px;">
+    <button class="tbtn" id="btnFontDec" title="Diminuir o tamanho da letra da página inteira (leitura)">A−</button>
+    <button class="tbtn" id="btnFontReset" title="Restaurar o tamanho padrão da letra da página">A</button>
+    <button class="tbtn" id="btnFontInc" title="Aumentar o tamanho da letra da página inteira (leitura)">A+</button>
+  </span>
   <select id="bannerSelect" class="hidden" title="Aviso de manutenção no topo do artigo"></select>
   <span class="save-status" id="saveStatus"></span>
   <div class="format-toolbar hidden" id="formatToolbar" title="Selecione um texto e clique em um botão para formatá-lo">
@@ -517,11 +562,14 @@
     <button class="fmt-btn" data-cmd="italic" title="Itálico"><i>I</i></button>
     <button class="fmt-btn" data-cmd="underline" title="Sublinhado"><u>U</u></button>
     <button class="fmt-btn" data-cmd="strikeThrough" title="Tachado"><s>S</s></button>
+    <button class="fmt-btn" id="btnFontIncSel" title="Aumenta o tamanho da letra do texto selecionado">A+</button>
+    <button class="fmt-btn" id="btnFontDecSel" title="Diminui o tamanho da letra do texto selecionado">A−</button>
     <button class="fmt-btn" data-cmd="insertUnorderedList" title="Lista com marcadores">• Lista</button>
     <button class="fmt-btn" data-cmd="insertOrderedList" title="Lista numerada">1. Lista</button>
     <button class="fmt-btn" id="btnLink" title="Transforma o texto selecionado em link azul (ou cria um link novo, se nada estiver selecionado)">🔗 Link azul</button>
     <button class="fmt-btn" id="btnBlockquote" title="Transforma o parágrafo atual em citação">❝ Citação</button>
     <button class="fmt-btn" id="btnPre" title="Transforma o parágrafo atual em bloco de código">{ } Código</button>
+    <button class="fmt-btn" id="btnCiteNeeded" title="Insere a marca [carece de fontes], igual à Wikipédia real, logo depois do texto selecionado">[carece de fontes]</button>
     <button class="fmt-btn" id="btnClearFormat" title="Remove toda formatação e links do texto selecionado">✕ Limpar</button>
   </div>
   <div class="mode-pill">
@@ -598,6 +646,15 @@
       <button class="tbtn" id="imgAdjustCancel">Cancelar</button>
       <button class="tbtn primary" id="imgAdjustApply">✓ Aplicar</button>
     </div>
+  </div>
+</div>
+
+<!-- COLOR POPOVER (linhas/células de tabela) -->
+<div class="builder-pop" id="colorPopover">
+  <h3 id="colorPopoverTitle">🎨 Cor</h3>
+  <div class="builder-row" id="colorPopoverSwatches"></div>
+  <div style="margin-top:9px;display:flex;justify-content:flex-end;">
+    <button class="tbtn" id="colorPopoverClose">Fechar</button>
   </div>
 </div>
 
@@ -1278,6 +1335,74 @@ function T(){ return {
       {t:'row', label:'Afluentes', value:'Principais rios afluentes'}
     ],
     body:[{heading:null, text:'Escreva aqui a introdução sobre o lago.'},{heading:'Formação', text:'Origem geológica do lago.'},{heading:'Ecossistema', text:'Fauna e flora associadas.'}]
+  },
+  restaurante: {
+    emoji:'🍴', name:'Restaurante / Estabelecimento', desc:'Ficha de restaurante com avaliação em estrelas, tipo de culinária, endereço e coordenadas.',
+    title:'Nome do Restaurante', subtitle:'restaurante de [tipo de culinária]',
+    infobox:[
+      {t:'title', text:'Nome do Restaurante'},
+      {t:'imggrid', items:[{src:null,caption:'Fachada / prato principal'}]},
+      {t:'rating', label:'Avaliação', value:4, max:5},
+      {t:'tags', label:'Culinária', items:['Italiana','Contemporânea']},
+      {t:'row', label:'Endereço', value:'Rua Exemplo, 123 — Cidade'},
+      {t:'coord', label:'Localização', value:'00°00′00″S 00°00′00″O'},
+      {t:'row', label:'Faixa de preço', value:'Ex: R$ 80–150 por pessoa'},
+      {t:'row', label:'Fundação', value:'aaaa'},
+      {t:'row', label:'Chef', value:'Nome do(a) chef'},
+      {t:'row', label:'Horário', value:'Ter–Dom, 12h–23h'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o restaurante.'},{heading:'Cardápio', text:'Pratos e especialidades da casa.'},{heading:'Ambiente', text:'Decoração e atmosfera do local.'}]
+  },
+  planeta: {
+    emoji:'🪐', name:'Planeta / Corpo celeste', desc:'Ficha astronômica com órbita, satélites, composição atmosférica e características físicas.',
+    title:'Nome do Planeta', subtitle:'planeta do sistema [nome]',
+    infobox:[
+      {t:'title', text:'Nome do Planeta'},
+      {t:'imggrid', items:[{src:null,caption:'Imagem do planeta'}]},
+      {t:'section', text:'Elementos orbitais'},
+      {t:'row', label:'Estrela', value:'Nome da estrela'},
+      {t:'row', label:'Semieixo maior', value:'Ex: 1 UA'},
+      {t:'row', label:'Período orbital', value:'Ex: 365 dias'},
+      {t:'row', label:'Satélites', value:'Ex: 1'},
+      {t:'section', text:'Características físicas'},
+      {t:'row', label:'Raio médio', value:'Ex: 6.371 km'},
+      {t:'row', label:'Massa', value:'Ex: 5,97 × 10²⁴ kg'},
+      {t:'row', label:'Gravidade', value:'Ex: 9,8 m/s²'},
+      {t:'row', label:'Temperatura média', value:'Ex: 15 °C'},
+      {t:'tags', label:'Composição atmosférica', items:['Nitrogênio','Oxigênio']}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre o planeta.'},{heading:'Características físicas', text:'Composição, atmosfera e clima.'},{heading:'Exploração', text:'Missões e descobertas relacionadas.'}]
+  },
+  mitologia: {
+    emoji:'⚡', name:'Divindade / Mitologia', desc:'Ficha de divindade ou figura mitológica, com domínios, símbolos e família.',
+    title:'Nome da Divindade', subtitle:'divindade da mitologia [nome]',
+    infobox:[
+      {t:'title', text:'Nome da Divindade'},
+      {t:'image', src:null, caption:'Representação artística'},
+      {t:'tags', label:'Domínios', items:['Guerra','Sabedoria']},
+      {t:'row', label:'Símbolo(s)', value:'Ex: Raio, coruja'},
+      {t:'row', label:'Morada', value:'Ex: Monte Olimpo'},
+      {t:'row', label:'Progenitores', value:'Nomes dos pais mitológicos'},
+      {t:'row', label:'Cônjuge', value:'Nome do cônjuge'},
+      {t:'row', label:'Equivalente romano/outro', value:'Nome equivalente'}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a divindade.'},{heading:'Mitos', text:'Principais histórias e lendas associadas.'},{heading:'Culto', text:'Como era cultuada e seus templos.'}]
+  },
+  criptomoeda: {
+    emoji:'🪙', name:'Criptomoeda', desc:'Ficha de moeda digital fictícia com criador, fornecimento, casos de uso e popularidade.',
+    title:'Nome da Moeda', subtitle:'criptomoeda / ativo digital',
+    infobox:[
+      {t:'title', text:'Nome da Moeda'},
+      {t:'imggrid', items:[{src:null,caption:'Logotipo'}]},
+      {t:'row', label:'Símbolo', value:'Ex: XYZ'},
+      {t:'row', label:'Criador(a)', value:'Nome do(a) criador(a)'},
+      {t:'row', label:'Lançamento', value:'aaaa'},
+      {t:'row', label:'Fornecimento máximo', value:'Ex: 21.000.000'},
+      {t:'tags', label:'Casos de uso', items:['Pagamentos','Contratos inteligentes']},
+      {t:'row', label:'Algoritmo', value:'Ex: Prova de trabalho'},
+      {t:'rating', label:'Popularidade', value:3, max:5}
+    ],
+    body:[{heading:null, text:'Escreva aqui a introdução sobre a criptomoeda.'},{heading:'Funcionamento', text:'Como a tecnologia funciona.'},{heading:'Adoção', text:'Uso e mercado.'}]
   }
 
 };}
@@ -1303,7 +1428,8 @@ var QUICK_FIELDS = [
   { cat:'Economia', items:['PIB','PIB per capita','Moeda','Inflação','Exportações','Importações','Dívida pública'] },
   { cat:'Arquitetura', items:['Arquiteto','Estilo','Construção','Inauguração','Altura','Material','Patrimônio'] },
   { cat:'Educação', items:['Reitor(a)','Fundação','Campus','Estudantes','Cursos','Ranking','Mantenedora'] },
-  { cat:'Internet', items:['Criador(a)','Lançamento','Usuários','Categoria','URL','Desenvolvedor(a)'] }
+  { cat:'Internet', items:['Criador(a)','Lançamento','Usuários','Categoria','URL','Desenvolvedor(a)'] },
+  { cat:'Avaliação / Local', items:['Avaliação — estrelas','Popularidade — estrelas','Nota da crítica — estrelas','Categorias — tags','Gêneros — tags','Ingredientes — tags','Coordenadas — coordenadas','Localização — coordenadas'] }
 ];
 function quickFieldOptionsHtml(){
   return QUICK_FIELDS.map(function(group){
@@ -1319,6 +1445,15 @@ function addQuickField(label){
     var base = label.split(' — ')[0];
     state.infobox.push({t:'section', text:base});
     state.infobox.push({t:'twocol', left:'Lado A', right:'Lado B'});
+  } else if(label.indexOf(' — estrelas') >= 0){
+    var rLabel = label.split(' — ')[0];
+    state.infobox.push({t:'rating', label:rLabel, value:3, max:5});
+  } else if(label.indexOf(' — tags') >= 0){
+    var tLabel = label.split(' — ')[0];
+    state.infobox.push({t:'tags', label:tLabel, items:['Tag 1','Tag 2']});
+  } else if(label.indexOf(' — coordenadas') >= 0){
+    var cLabel = label.split(' — ')[0];
+    state.infobox.push({t:'coord', label:cLabel, value:'00°00′00″S 00°00′00″O'});
   } else {
     state.infobox.push({t:'row', label:label, value:'Valor'});
   }
@@ -1371,6 +1506,12 @@ function sanitizeRichHTML(html){
         }
         Array.from(ch.attributes).forEach(function(a){
           var n=a.name.toLowerCase();
+          if(ch.tagName==='SPAN' && n==='style'){
+            // Só permite a propriedade font-size (valor numérico em px), usada pelo A+/A- de seleção.
+            var v=(a.value||'').trim();
+            if(!/^font-size:\s*\d{1,3}(\.\d+)?px;?$/i.test(v)) ch.removeAttribute(a.name);
+            return;
+          }
           if(n!=='href' && n!=='target' && n!=='rel') ch.removeAttribute(a.name);
         });
         if(ch.tagName==='A'){
@@ -1550,6 +1691,30 @@ function renderInfobox(){
               '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     } else if(item.t === 'divider'){
       html += '<div class="ib-divider-wrap" data-item-wrap="'+idx+'">'+handle+'<hr style="border:0;border-top:1px solid #a2a9b1;margin:6px 0"><button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'rating'){
+      var maxStars = item.max || 5, curVal = item.value || 0, starsHtml = '';
+      for(var si=1; si<=maxStars; si++){
+        starsHtml += '<span class="star" data-ratingidx="'+idx+'" data-starval="'+si+'">'+(si<=curVal ? '★' : '☆')+'</span>';
+      }
+      html += '<div class="ib-rating-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<span class="ib-rating-label" contenteditable data-idx="'+idx+'" data-field="label">'+escRich(item.label)+'</span>'+
+              '<span class="stars">'+starsHtml+'</span>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'tags'){
+      var tagsHtml = (item.items||[]).map(function(tg, ti){
+        return '<span class="ib-tag" contenteditable data-idx="'+idx+'" data-field="tagitem" data-ti="'+ti+'">'+escRich(tg)+
+          (mode==='edit' ? '<button class="ib-tag-del" data-deltag="'+idx+'" data-ti="'+ti+'" title="Remover tag">×</button>' : '')+'</span>';
+      }).join('');
+      html += '<div class="ib-tags-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<span class="ib-tags-label" contenteditable data-idx="'+idx+'" data-field="label">'+escRich(item.label)+'</span>'+
+              '<div class="ib-tags">'+tagsHtml+'</div>'+
+              (mode==='edit' ? '<span class="ib-tags-addbtn" data-addtag="'+idx+'">+ adicionar tag</span>' : '')+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
+    } else if(item.t === 'coord'){
+      html += '<div class="ib-coord-wrap" data-item-wrap="'+idx+'">'+handle+
+              '<div class="ib-coord"><span class="globe-ic">🌐</span>'+
+              '<span class="coord-val" contenteditable data-idx="'+idx+'" data-field="value">'+escRich(item.value)+'</span></div>'+
+              '<button class="row-del" data-del="'+idx+'" title="Remover">×</button></div>';
     }
   });
 
@@ -1564,6 +1729,7 @@ function renderInfobox(){
         '<span class="ib-addbar-label">Elemento genérico:</span>'+
         '<select id="addRowType">'+
           '<option value="row">Campo (rótulo + valor)</option>'+
+          '<option value="title">Título / legenda simples (sem rótulo)</option>'+
           '<option value="section">Seção (título)</option>'+
           '<option value="twocol">Duas colunas</option>'+
           '<option value="list">Lista</option>'+
@@ -1572,6 +1738,9 @@ function renderInfobox(){
           '<option value="scoreline">Placar (times)</option>'+
           '<option value="quote">Citação em destaque</option>'+
           '<option value="notice">Aviso / nota</option>'+
+          '<option value="rating">Avaliação (estrelas)</option>'+
+          '<option value="tags">Tags / categorias</option>'+
+          '<option value="coord">Coordenadas geográficas</option>'+
           '<option value="divider">Linha separadora</option>'+
         '</select>'+
         '<button id="addRowBtn">+ Adicionar</button>'+
@@ -1603,7 +1772,7 @@ function renderBody(){
       html += '<div class="section-header">'+
         '<span class="drag-handle" draggable="true" data-drag-kind="section" data-drag-index="'+i+'" title="Arrastar seção">☷</span>'+
         '<span class="collapse-arrow'+(isCollapsed?' collapsed':'')+'" data-carrow="'+i+'">▼</span>'+
-        '<h2 contenteditable data-bidx="'+i+'" data-bfield="heading">'+escRich(sec.heading)+'</h2>'+
+        '<h2 id="sec-'+i+'" contenteditable data-bidx="'+i+'" data-bfield="heading">'+escRich(sec.heading)+'</h2>'+
         '</div>';
     }
     html += '<div class="section-content'+(isCollapsed?' collapsed':'')+'" data-section-content="'+i+'">';
@@ -1685,10 +1854,25 @@ function renderBodyBlock(block, si, bi, total){
   } else if(block.type==='table'){
     var rows=block.rows||[['Cabeçalho 1','Cabeçalho 2'],['Valor','Valor']];
     var cellImgs=block.cellImages||{};
-    h+='<div class="body-table-wrap"><table class="body-table"><thead><tr>'+rows[0].map(function(c,ci){return '<th contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="0" data-ci="'+ci+'">'+escRich(c)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.slice(1).map(function(r,ri){
+    var rowColors=block.rowColors||{};
+    var cellColors=block.cellColors||{};
+    var titleHtml=(mode==='edit' || block.caption) ?
+      '<div class="table-title" contenteditable data-block-field="caption" data-section="'+si+'" data-block="'+bi+'">'+escRich(block.caption||'')+'</div>' : '';
+    h+='<div class="body-table-wrap">'+titleHtml+'<table class="body-table"><thead><tr'+(rowColors['0']?(' style="background:'+rowColors['0']+'"'):'')+'>'+rows[0].map(function(c,ci){
+      var hColor=cellColors['0-'+ci];
+      var canDelCol=(mode==='edit' && rows[0].length>1);
+      var hBtns=(mode==='edit')?(
+        (ci===0?'<button class="cell-color-btn" data-rowcolorbtn="1" data-table-section="'+si+'" data-table-block="'+bi+'" data-cri="0" title="Colorir esta linha">🎨 linha</button>':'')+
+        '<button class="cell-color-btn" data-cellcolorbtn="1" data-table-section="'+si+'" data-table-block="'+bi+'" data-cri="0" data-cci="'+ci+'" title="Colorir esta célula">🎨</button>'+
+        (canDelCol?'<button class="cell-del-btn" data-delcolbtn="1" data-table-section="'+si+'" data-table-block="'+bi+'" data-cci="'+ci+'" title="Remover esta coluna">🗑️ coluna</button>':'')
+      ):'';
+      return '<th'+(hColor?(' style="background:'+hColor+'"'):'')+'>'+hBtns+'<div class="cell-text" contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="0" data-ci="'+ci+'">'+escRich(c)+'</div></th>';
+    }).join('')+'</tr></thead><tbody>'+rows.slice(1).map(function(r,ri){
       var realRi=ri+1;
-      return '<tr>'+r.map(function(c,ci){
+      var rColor=rowColors[String(realRi)];
+      return '<tr'+(rColor?(' style="background:'+rColor+'"'):'')+'>'+r.map(function(c,ci){
         var key=realRi+'-'+ci, cimg=cellImgs[key], cellExtra='';
+        var cColor=cellColors[key];
         if(cimg && cimg.src){
           cellExtra='<div class="cell-img-holder"><img src="'+cimg.src+'" style="'+imgStyleFor(cimg)+'">'+
             (mode==='edit'?'<button class="img-adjust-btn" data-adjusttableimg="'+si+'" data-adjusttableblock="'+bi+'" data-adjustri="'+realRi+'" data-adjustci="'+ci+'" title="Ajeitar imagem">🖌️</button>':'')+
@@ -1697,7 +1881,12 @@ function renderBodyBlock(block, si, bi, total){
         } else if(mode==='edit'){
           cellExtra='<button class="cell-img-add" data-addtableimg="'+si+'" data-addtableblock="'+bi+'" data-addri="'+realRi+'" data-addci="'+ci+'" title="Adicionar imagem nesta célula">🖼️ imagem</button>';
         }
-        return '<td>'+cellExtra+'<div class="cell-text" contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="'+realRi+'" data-ci="'+ci+'">'+escRich(c)+'</div></td>';
+        var cBtns=(mode==='edit')?(
+          (ci===0?'<button class="cell-color-btn" data-rowcolorbtn="1" data-table-section="'+si+'" data-table-block="'+bi+'" data-cri="'+realRi+'" title="Colorir esta linha">🎨 linha</button>':'')+
+          '<button class="cell-color-btn" data-cellcolorbtn="1" data-table-section="'+si+'" data-table-block="'+bi+'" data-cri="'+realRi+'" data-cci="'+ci+'" title="Colorir esta célula">🎨</button>'+
+          (ci===0?'<button class="cell-del-btn" data-delrowbtn="1" data-table-section="'+si+'" data-table-block="'+bi+'" data-cri="'+realRi+'" title="Remover esta linha">🗑️ linha</button>':'')
+        ):'';
+        return '<td'+(cColor?(' style="background:'+cColor+'"'):'')+'>'+cBtns+cellExtra+'<div class="cell-text" contenteditable data-table-section="'+si+'" data-table-block="'+bi+'" data-ri="'+realRi+'" data-ci="'+ci+'">'+escRich(c)+'</div></td>';
       }).join('')+'</tr>';
     }).join('')+'</tbody></table></div>'+
     (mode==='edit'?'<div class="section-tools"><button class="mini-builder-btn" data-addtablerow="'+si+'" data-block="'+bi+'">＋ linha</button><button class="mini-builder-btn" data-addtablecol="'+si+'" data-block="'+bi+'">＋ coluna</button></div>':'');
@@ -1708,14 +1897,24 @@ function renderBodyBlock(block, si, bi, total){
 }
 function bindBlockImageClicks(){}
 function renderToc(){
+  // bug corrigido: os links do índice sempre apontavam para "#" (não iam a
+  // lugar nenhum) porque os títulos de seção não tinham id nenhum. Agora
+  // cada <h2> recebe um id ("sec-N") e o índice aponta para ele; também
+  // removemos as tags de formatação (negrito etc.) do texto do índice, que
+  // antes apareciam como "<b>...</b>" literal em vez de texto normal.
   var tocEl = document.getElementById('articleToc');
-  var headings = state.body.filter(function(s){ return s.heading !== null && s.heading !== undefined && s.heading.trim() !== ''; });
+  var headings = [];
+  state.body.forEach(function(s, i){
+    if(s.heading !== null && s.heading !== undefined && plainFromHTML(s.heading).trim() !== ''){
+      headings.push({idx:i, text:plainFromHTML(s.heading)});
+    }
+  });
   if(mode !== 'read' || headings.length < 3){
     tocEl.innerHTML = '';
     return;
   }
-  var items = headings.map(function(s, i){
-    return '<li>'+(i+1)+' <a href="#">'+esc(s.heading)+'</a></li>';
+  var items = headings.map(function(h, i){
+    return '<li>'+(i+1)+' <a href="#sec-'+h.idx+'">'+esc(h.text)+'</a></li>';
   }).join('');
   tocEl.innerHTML = '<div class="wiki-toc"><div class="wiki-toc-title">Índice</div><ol>'+items+'</ol></div>';
 }
@@ -1815,6 +2014,8 @@ document.getElementById('infobox').addEventListener('input', function(e){
   var val = el.innerHTML;
   if(field === 'listitem'){
     item.items[parseInt(el.dataset.li,10)] = val;
+  } else if(field === 'tagitem'){
+    item.items[parseInt(el.dataset.ti,10)] = val;
   } else if(field === 'caption'){
     if(el.dataset.ci !== undefined){ item.items[parseInt(el.dataset.ci,10)].caption = val; }
     else { item.caption = val; }
@@ -1859,6 +2060,24 @@ document.getElementById('infobox').addEventListener('click', function(e){
     renderInfobox(); scheduleSave();
     return;
   }
+  if(t.dataset && t.dataset.addtag !== undefined){
+    var tgIdx = parseInt(t.dataset.addtag,10);
+    state.infobox[tgIdx].items.push('Nova tag');
+    renderInfobox(); scheduleSave();
+    return;
+  }
+  if(t.dataset && t.dataset.deltag !== undefined){
+    var dtIdx = parseInt(t.dataset.deltag,10), dtTi = parseInt(t.dataset.ti,10);
+    state.infobox[dtIdx].items.splice(dtTi,1);
+    renderInfobox(); scheduleSave();
+    return;
+  }
+  if(mode === 'edit' && t.dataset && t.dataset.starval !== undefined){
+    var rIdx = parseInt(t.dataset.ratingidx,10), rVal = parseInt(t.dataset.starval,10);
+    state.infobox[rIdx].value = rVal;
+    renderInfobox(); scheduleSave();
+    return;
+  }
   if(mode === 'edit' && t.dataset && t.dataset.adjustimg !== undefined){
     var aIdx = parseInt(t.dataset.adjustimg,10);
     var aCi = t.dataset.adjustci !== undefined ? parseInt(t.dataset.adjustci,10) : null;
@@ -1873,6 +2092,40 @@ document.getElementById('infobox').addEventListener('click', function(e){
   }
 });
 
+function reindexTableAfterRowRemoval(tbl, removedRi){
+  var maps = ['rowColors','cellColors','cellImages'];
+  maps.forEach(function(mapName){
+    var map = tbl[mapName];
+    if(!map) return;
+    var newMap = {};
+    Object.keys(map).forEach(function(key){
+      if(mapName === 'rowColors'){
+        var ri = parseInt(key,10);
+        if(ri === removedRi) return;
+        newMap[String(ri > removedRi ? ri-1 : ri)] = map[key];
+      } else {
+        var parts = key.split('-'), ri2 = parseInt(parts[0],10), ci2 = parseInt(parts[1],10);
+        if(ri2 === removedRi) return;
+        newMap[(ri2 > removedRi ? ri2-1 : ri2)+'-'+ci2] = map[key];
+      }
+    });
+    tbl[mapName] = newMap;
+  });
+}
+function reindexTableAfterColRemoval(tbl, removedCi){
+  var maps = ['cellColors','cellImages'];
+  maps.forEach(function(mapName){
+    var map = tbl[mapName];
+    if(!map) return;
+    var newMap = {};
+    Object.keys(map).forEach(function(key){
+      var parts = key.split('-'), ri = parseInt(parts[0],10), ci = parseInt(parts[1],10);
+      if(ci === removedCi) return;
+      newMap[ri+'-'+(ci > removedCi ? ci-1 : ci)] = map[key];
+    });
+    tbl[mapName] = newMap;
+  });
+}
 function moveInfoboxItem(idx, dir){
   var to = idx + dir;
   if(to < 0 || to >= state.infobox.length) return;
@@ -1884,13 +2137,18 @@ function moveInfoboxItem(idx, dir){
 function addInfoboxRow(type){
   var defaults = {
     row: {t:'row', label:'Novo campo', value:'Valor'},
+    title: {t:'title', text:'Título simples'},
     section: {t:'section', text:'Nova seção'},
     twocol: {t:'twocol', left:'Coluna A', right:'Coluna B'},
     list: {t:'list', label:'Lista', items:['Item 1']},
     imggrid: {t:'imggrid', items:[{src:null, caption:'legenda'}]},
+    image: {t:'image', src:null, caption:'legenda', posX:50, posY:50, zoom:1, fit:'cover'},
     scoreline: {t:'scoreline', teamA:'Time A', teamB:'Time B', scoreA:'0', scoreB:'0'},
     quote: {t:'quote', text:'Uma citação marcante.'},
     notice: {t:'notice', text:'Nota ou aviso curto.'},
+    rating: {t:'rating', label:'Avaliação', value:3, max:5},
+    tags: {t:'tags', label:'Categorias', items:['Tag 1','Tag 2']},
+    coord: {t:'coord', label:'Coordenadas', value:'00°00′00″S 00°00′00″O'},
     divider: {t:'divider'}
   };
   state.infobox.push(deepClone(defaults[type] || defaults.row));
@@ -1936,6 +2194,58 @@ document.getElementById('fileInput').addEventListener('change', function(e){
    AJEITAR IMAGEM (posicionar / dar zoom)
 ============================================================ */
 var pendingAdjust = null;
+/* ============================================================
+   COR DE LINHA / CÉLULA EM TABELAS
+   (inspirado nas tabelas coloridas da Wikipédia: resultados de
+   eleição, tabelas de classificação esportiva com zonas de
+   acesso/rebaixamento, etc.)
+============================================================ */
+var WIKI_TABLE_COLORS = [
+  {name:'Sem cor', val:null},
+  {name:'Verde (ex: vitória / classificação)', val:'#d5fdd5'},
+  {name:'Vermelho (ex: derrota / rebaixamento)', val:'#ffd9d9'},
+  {name:'Amarelo (ex: empate / alerta)', val:'#fff6c9'},
+  {name:'Azul (ex: destaque)', val:'#d9e8ff'},
+  {name:'Laranja', val:'#ffe3c2'},
+  {name:'Roxo', val:'#ecd9ff'},
+  {name:'Cinza', val:'#e6e6e6'}
+];
+var pendingColorTarget = null; // {section, block, ri, ci|null}
+function openColorPopover(target, isRow){
+  pendingColorTarget = target;
+  document.getElementById('colorPopoverTitle').textContent = isRow ? '🎨 Cor da linha' : '🎨 Cor da célula';
+  var sw = document.getElementById('colorPopoverSwatches');
+  sw.innerHTML = WIKI_TABLE_COLORS.map(function(c){
+    return '<button type="button" class="swatch-btn'+(c.val?'':' none')+'" data-colorval="'+(c.val||'')+'" title="'+esc(c.name)+'"'+
+      (c.val?(' style="background:'+c.val+'"'):'')+'></button>';
+  }).join('');
+  document.getElementById('colorPopover').classList.add('open');
+}
+function closeColorPopover(){
+  document.getElementById('colorPopover').classList.remove('open');
+  pendingColorTarget = null;
+}
+document.getElementById('colorPopoverSwatches').addEventListener('click', function(e){
+  var btn = e.target.closest('button[data-colorval]');
+  if(!btn || !pendingColorTarget) return;
+  var val = btn.dataset.colorval || null;
+  var t = pendingColorTarget;
+  var block = ensureSectionBlocks(t.section)[t.block];
+  if(!block) return;
+  if(t.ci === null || t.ci === undefined){
+    if(!block.rowColors) block.rowColors = {};
+    if(val) block.rowColors[String(t.ri)] = val; else delete block.rowColors[String(t.ri)];
+  } else {
+    if(!block.cellColors) block.cellColors = {};
+    var key = t.ri+'-'+t.ci;
+    if(val) block.cellColors[key] = val; else delete block.cellColors[key];
+  }
+  closeColorPopover();
+  renderBody();
+  scheduleSave();
+});
+document.getElementById('colorPopoverClose').addEventListener('click', closeColorPopover);
+
 function openImgAdjust(obj, renderFn){
   if(!obj || !obj.src) return;
   pendingAdjust = { obj:obj, render:renderFn, posX:(obj.posX!=null?obj.posX:50), posY:(obj.posY!=null?obj.posY:50), zoom:(obj.zoom||1), fit:(obj.fit||'cover') };
@@ -2034,6 +2344,40 @@ document.getElementById('btnDarkMode').addEventListener('click', function(){
   try{ if(localStorage.getItem('wikiEditorDark')==='1') applyDarkMode(true); }catch(e){}
 })();
 
+/* ============================================================
+   TAMANHO DA LETRA (leitura) — novo recurso
+============================================================ */
+var FONT_SCALES = [0.85,0.92,1,1.1,1.22,1.35,1.5];
+var fontScaleIdx = 2; // 1 = tamanho padrão
+function applyFontScale(){
+  var scale = FONT_SCALES[fontScaleIdx];
+  var art = document.querySelector('.wiki-article');
+  if(art) art.style.zoom = scale;
+  try{ localStorage.setItem('wikiEditorFontScale', String(fontScaleIdx)); }catch(e){}
+}
+document.getElementById('btnFontInc').addEventListener('click', function(){
+  fontScaleIdx = Math.min(FONT_SCALES.length-1, fontScaleIdx+1);
+  applyFontScale();
+});
+document.getElementById('btnFontDec').addEventListener('click', function(){
+  fontScaleIdx = Math.max(0, fontScaleIdx-1);
+  applyFontScale();
+});
+document.getElementById('btnFontReset').addEventListener('click', function(){
+  fontScaleIdx = 2;
+  applyFontScale();
+});
+(function(){
+  try{
+    var saved = localStorage.getItem('wikiEditorFontScale');
+    if(saved !== null){
+      var n = parseInt(saved,10);
+      if(!isNaN(n) && n>=0 && n<FONT_SCALES.length) fontScaleIdx = n;
+    }
+  }catch(e){}
+  applyFontScale();
+})();
+
 document.getElementById('articleBody').addEventListener('input', function(e){
   var el=e.target;
   if(el.dataset.bidx!==undefined){
@@ -2091,6 +2435,46 @@ document.getElementById('articleBody').addEventListener('click', function(e){
   if(e.target.dataset && e.target.dataset.addtablecol!==undefined){
     var tcs=parseInt(e.target.dataset.addtablecol,10), tcb=parseInt(e.target.dataset.block,10);
     var tab=ensureSectionBlocks(tcs)[tcb]; tab.rows.forEach(function(r,ri){ r.push(ri===0?'Novo cabeçalho':'Valor'); }); renderBody(); scheduleSave(); return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.delrowbtn!==undefined){
+    var drs=parseInt(e.target.dataset.tableSection,10), drb=parseInt(e.target.dataset.tableBlock,10), dri=parseInt(e.target.dataset.cri,10);
+    var drTbl=ensureSectionBlocks(drs)[drb];
+    if(drTbl && drTbl.rows && drTbl.rows.length>1 && dri>0){
+      if(!confirm('Remover esta linha da tabela? Essa ação não pode ser desfeita.')) return;
+      drTbl.rows.splice(dri,1);
+      reindexTableAfterRowRemoval(drTbl, dri);
+      renderBody(); scheduleSave();
+    }
+    return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.delcolbtn!==undefined){
+    var dcs=parseInt(e.target.dataset.tableSection,10), dcb=parseInt(e.target.dataset.tableBlock,10), dci=parseInt(e.target.dataset.cci,10);
+    var dcTbl=ensureSectionBlocks(dcs)[dcb];
+    if(dcTbl && dcTbl.rows && dcTbl.rows[0] && dcTbl.rows[0].length>1){
+      if(!confirm('Remover esta coluna da tabela (em todas as linhas)? Essa ação não pode ser desfeita.')) return;
+      dcTbl.rows.forEach(function(r){ r.splice(dci,1); });
+      reindexTableAfterColRemoval(dcTbl, dci);
+      renderBody(); scheduleSave();
+    }
+    return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.rowcolorbtn!==undefined){
+    openColorPopover({
+      section: parseInt(e.target.dataset.tableSection,10),
+      block: parseInt(e.target.dataset.tableBlock,10),
+      ri: parseInt(e.target.dataset.cri,10),
+      ci: null
+    }, true);
+    return;
+  }
+  if(mode==='edit' && e.target.dataset && e.target.dataset.cellcolorbtn!==undefined){
+    openColorPopover({
+      section: parseInt(e.target.dataset.tableSection,10),
+      block: parseInt(e.target.dataset.tableBlock,10),
+      ri: parseInt(e.target.dataset.cri,10),
+      ci: parseInt(e.target.dataset.cci,10)
+    }, false);
+    return;
   }
   if(mode==='edit' && e.target.dataset && (e.target.dataset.adjustbodyimg!==undefined || e.target.dataset.adjustgalleryimg!==undefined)){
     var abSi=parseInt(e.target.dataset.adjustbodyimg!==undefined?e.target.dataset.adjustbodyimg:e.target.dataset.adjustgalleryimg,10);
@@ -2295,12 +2679,51 @@ document.getElementById('btnLink').addEventListener('click',function(){
   }
   rememberSelection();syncActiveRichField();scheduleSave();
 });
+document.getElementById('btnCiteNeeded').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnCiteNeeded').addEventListener('click',function(){
+  if(!restoreSelection()){ showToast('👆 Clique logo depois do trecho que precisa de fonte.'); return; }
+  var sel=window.getSelection();
+  if(sel && sel.rangeCount && !sel.isCollapsed) sel.collapseToEnd();
+  document.execCommand('insertHTML', false, '&nbsp;<sup><a href="#" title="Esta afirmação precisa de uma fonte confiável">[carece de fontes]</a></sup>');
+  rememberSelection();syncActiveRichField();scheduleSave();
+});
 document.getElementById('btnClearFormat').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
 document.getElementById('btnClearFormat').addEventListener('click',function(){
   if(!restoreSelection()){ showToast('👆 Clique dentro de um texto para limpar a formatação.'); return; }
   document.execCommand('removeFormat',false,null);document.execCommand('unlink',false,null);syncActiveRichField();scheduleSave();
 });
 function syncActiveRichField(){if(!lastEditable)return;lastEditable.dispatchEvent(new Event('input',{bubbles:true}));}
+/* ============================================================
+   TAMANHO DA LETRA DO TEXTO SELECIONADO (A+ / A−)
+   Funciona como negrito/itálico: só afeta o trecho selecionado.
+   Usa o truque clássico do execCommand('fontSize') com um valor
+   "marcador" (7) pra achar exatamente o que foi envolvido, e troca
+   pela unidade em px calculada a partir do tamanho atual herdado.
+============================================================ */
+function applySelectedFontSizeStep(direction){
+  if(!restoreSelection()){ showToast('👆 Selecione um texto para mudar o tamanho da letra.'); return; }
+  var sel = window.getSelection();
+  if(!sel || !sel.rangeCount || sel.isCollapsed){ showToast('👆 Selecione o texto que você quer aumentar ou diminuir.'); return; }
+  var editable = lastEditable;
+  if(!editable) return;
+  document.execCommand('fontSize', false, '7');
+  var factor = direction > 0 ? 1.15 : (1/1.15);
+  var markers = editable.querySelectorAll('font[size="7"]');
+  if(!markers.length){ showToast('👆 Selecione o texto que você quer aumentar ou diminuir.'); return; }
+  Array.prototype.forEach.call(markers, function(f){
+    var span = document.createElement('span');
+    while(f.firstChild) span.appendChild(f.firstChild);
+    f.parentNode.replaceChild(span, f);
+    var basePx = parseFloat(window.getComputedStyle(span).fontSize) || 15;
+    var targetPx = Math.max(10, Math.min(basePx*factor, 40));
+    span.style.fontSize = targetPx.toFixed(1)+'px';
+  });
+  rememberSelection(); syncActiveRichField(); scheduleSave();
+}
+document.getElementById('btnFontIncSel').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnFontIncSel').addEventListener('click',function(){ applySelectedFontSizeStep(1); });
+document.getElementById('btnFontDecSel').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
+document.getElementById('btnFontDecSel').addEventListener('click',function(){ applySelectedFontSizeStep(-1); });
 function updateFormatToolbarVisibility(){document.getElementById('formatToolbar').classList.toggle('hidden',mode!=='edit');}
 document.getElementById('btnBlockquote').addEventListener('mousedown',function(e){e.preventDefault();rememberSelection();});
 document.getElementById('btnBlockquote').addEventListener('click',function(){
@@ -2500,10 +2923,17 @@ document.getElementById('btnDownload').addEventListener('click', function(){
     '<footer class="wiki-footer">Este site é um projeto paródia / brincadeira no estilo Wikipédia. Não é afiliado à Wikimedia Foundation.</footer>'+
     '<div class="badge">🛠️ Página criada com Wikipédia Editor (paródia)</div>'+
     '<button id="staticDarkToggle" title="Alternar modo escuro" style="position:fixed;bottom:10px;left:10px;z-index:15;background:rgba(32,33,34,.85);color:#fff;border:none;font-size:11px;padding:5px 10px;border-radius:14px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',Helvetica,Arial,sans-serif;">🌙 Modo escuro</button>'+
+    '<button id="staticFontDec" title="Diminuir letra" style="position:fixed;bottom:44px;left:10px;z-index:15;background:rgba(32,33,34,.85);color:#fff;border:none;font-size:11px;padding:5px 10px;border-radius:14px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',Helvetica,Arial,sans-serif;">A−</button>'+
+    '<button id="staticFontInc" title="Aumentar letra" style="position:fixed;bottom:44px;left:52px;z-index:15;background:rgba(32,33,34,.85);color:#fff;border:none;font-size:11px;padding:5px 10px;border-radius:14px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,\'Helvetica Neue\',Helvetica,Arial,sans-serif;">A+</button>'+
     '<script>document.querySelectorAll(".collapse-arrow").forEach(function(a){a.style.cursor="pointer";a.addEventListener("click",function(){a.classList.toggle("collapsed");var p=a.closest(".section-header").nextElementSibling;if(p)p.classList.toggle("collapsed");});});'+
     'var sdt=document.getElementById("staticDarkToggle");function setDark(on){document.body.classList.toggle("dark-mode",!!on);sdt.textContent=on?"☀️ Modo claro":"🌙 Modo escuro";try{localStorage.setItem("wikiPageDark",on?"1":"0");}catch(e){}}'+
     'sdt.addEventListener("click",function(){setDark(!document.body.classList.contains("dark-mode"));});'+
-    'try{if(localStorage.getItem("wikiPageDark")==="1")setDark(true);}catch(e){}<\/script>'+
+    'try{if(localStorage.getItem("wikiPageDark")==="1")setDark(true);}catch(e){}'+
+    'var sfs=[0.85,0.92,1,1.1,1.22,1.35,1.5],sfi=2,artEl=document.querySelector(".wiki-article");'+
+    'function setFontScale(i){sfi=Math.max(0,Math.min(sfs.length-1,i));if(artEl)artEl.style.zoom=sfs[sfi];try{localStorage.setItem("wikiPageFontScale",String(sfi));}catch(e){}}'+
+    'document.getElementById("staticFontInc").addEventListener("click",function(){setFontScale(sfi+1);});'+
+    'document.getElementById("staticFontDec").addEventListener("click",function(){setFontScale(sfi-1);});'+
+    'try{var sv=localStorage.getItem("wikiPageFontScale");if(sv!==null)sfi=parseInt(sv,10);}catch(e){}setFontScale(sfi);<\/script>'+
     '</body></html>';
   var blob = new Blob([pageHtml], {type:'text/html'});
   var a = document.createElement('a');
